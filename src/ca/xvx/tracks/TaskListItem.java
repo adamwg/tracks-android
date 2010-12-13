@@ -23,9 +23,9 @@ public class TaskListItem extends RelativeLayout {
 		_done = (CheckBox)findViewById(R.id.task_done);
 
 		_name.setText(_task.getDescription());
-		String infos = "Context: " + t.getContext().getName();
+		String infos = "";
 		if(t.getProject() != null) {
-			infos += ", Project: " + t.getProject().getName();
+			infos += "Project: " + t.getProject().getName();
 		}
 		_info.setText(infos);
 	}
