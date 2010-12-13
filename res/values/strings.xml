@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
+    <string name="server">Server</string>
+    <string name="app_name">Tracks</string>
+	<string name="err_badprefs">Please Check Your Settings</string>
+	<string name="settings">Settings</string>
+	<string name="refresh">Refresh</string>
+</resources>
