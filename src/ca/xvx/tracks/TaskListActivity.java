@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -49,6 +50,43 @@ public class TaskListActivity extends ExpandableListActivity {
 		try {
 			new TracksFetcher(context, _tla).execute(server, username, password);
 		} catch(Exception e) { }
+
+		registerForContextMenu(getExpandableListView());
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+
+		ExpandableListView.ExpandableListContextMenuInfo info = (ExpandableListView.ExpandableListContextMenuInfo)menuInfo;
+		if(info.targetView instanceof TaskListItem) {
+			MenuInflater inflater = getMenuInflater();
+			inflater.inflate(R.menu.task_context_menu, menu);
+		}
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		ExpandableListView.ExpandableListContextMenuInfo info = (ExpandableListView.ExpandableListContextMenuInfo)item.getMenuInfo();
+		int cid = getExpandableListView().getPackedPositionChild(info.packedPosition);
+		int gid = getExpandableListView().getPackedPositionGroup(info.packedPosition);
+		Task t = (Task)_tla.getChild(gid, cid);
+		String desc = t.getDescription();
+		Context context = getExpandableListView().getContext();
+		
+		switch(item.getItemId()) {
+		case R.id.edit_task:
+			Toast.makeText(context, "I would edit " + desc, Toast.LENGTH_LONG).show();
+			return true;
+		case R.id.delete_task:
+			Toast.makeText(context, "I would delete " + desc, Toast.LENGTH_LONG).show();
+			return true;
+		case R.id.done_task:
+			Toast.makeText(context, "I would complete " + desc, Toast.LENGTH_LONG).show();
+			return true;
+		default:
+			return super.onContextItemSelected(item);
+		}
 	}
 
 	@Override
