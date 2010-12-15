@@ -61,7 +61,9 @@ public class TaskListActivity extends ExpandableListActivity {
 		ExpandableListView.ExpandableListContextMenuInfo info = (ExpandableListView.ExpandableListContextMenuInfo)menuInfo;
 		if(info.targetView instanceof TaskListItem) {
 			MenuInflater inflater = getMenuInflater();
+			TaskListItem tli = (TaskListItem)info.targetView;
 			inflater.inflate(R.menu.task_context_menu, menu);
+			menu.setHeaderTitle(tli.getTask().getDescription());
 		}
 	}
 
