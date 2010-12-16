@@ -28,5 +28,18 @@ public class TaskListItem extends RelativeLayout {
 			infos += "Project: " + t.getProject().getName();
 		}
 		_info.setText(infos);
+
+		/*
+		_done.setOnCheckedChangedListener(new CompoundButton.OnCheckedChangedListener() {
+				public void onCheckedChanged(CompoundButton b, boolean checked) {
+					_task.setDone(checked);
+					
+				}
+			});
+		*/
+	}
+
+	protected Task getTask() {
+		return _task;
 	}
 }

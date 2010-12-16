@@ -1,10 +1,13 @@
 package ca.xvx.tracks;
 
 import android.app.ExpandableListActivity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
@@ -17,6 +20,7 @@ import android.view.View;
 public class TaskListActivity extends ExpandableListActivity {
 	private TaskListAdapter _tla;
 	private SharedPreferences _prefs;
+	private Handler _commHandler;
 
 	private static final int INIT_SETTINGS = 1;
 	
@@ -24,10 +28,15 @@ public class TaskListActivity extends ExpandableListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		_prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
+		TracksCommunicator comm = new TracksCommunicator(_prefs);
+		comm.start();
+		_commHandler = comm.getHandler();
+		
 		_tla = new TaskListAdapter();
 		setListAdapter(_tla);
-		_prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		if(!_prefs.getBoolean(PreferenceConstants.RUN, false)) {
 			_prefs.edit().putBoolean(PreferenceConstants.RUN, true).commit();
 			startActivityForResult(new Intent(this, SettingsActivity.class), INIT_SETTINGS);
@@ -37,20 +46,32 @@ public class TaskListActivity extends ExpandableListActivity {
 	}
 
 	private void refreshList() {
-		String server = _prefs.getString(PreferenceConstants.SERVER, null);
-		String username = _prefs.getString(PreferenceConstants.USERNAME, null);
-		String password = _prefs.getString(PreferenceConstants.PASSWORD, null);
-
-		Context context = getExpandableListView().getContext();
-
-		if(server == null || username == null || password == null) {
-			Toast.makeText(context, R.string.err_badprefs, Toast.LENGTH_LONG).show();
-		}
-		
-		try {
-			new TracksFetcher(context, _tla).execute(server, username, password);
-		} catch(Exception e) { }
-
+		final Context context = getExpandableListView().getContext();
+		final ProgressDialog p = ProgressDialog.show(context, "", "", true);
+		Message.obtain(_commHandler, TracksCommunicator.FETCH_TASKS, new Handler() {
+				@Override
+				public void handleMessage(Message msg) {
+					switch(msg.what) {
+					case 0:
+						p.setMessage((String)msg.obj);
+						break;
+					case 1:
+						p.dismiss();
+						Toast.makeText(context, (String)msg.obj, Toast.LENGTH_LONG).show();
+						break;
+					case 2:
+						_tla.notifyDataSetChanged();
+						p.dismiss();
+						
+						for(int g = 0; g < _tla.getGroupCount(); g++) {
+							if(!((TodoContext)_tla.getGroup(g)).isHidden()) {
+								getExpandableListView().expandGroup(g);
+							}
+						}
+					}
+				}
+			}).sendToTarget();
+				
 		registerForContextMenu(getExpandableListView());
 	}
 
