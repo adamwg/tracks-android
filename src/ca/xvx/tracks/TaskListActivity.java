@@ -114,7 +114,7 @@ public class TaskListActivity extends ExpandableListActivity {
 			Toast.makeText(context, "I would delete " + desc, Toast.LENGTH_LONG).show();
 			return true;
 		case R.id.done_task:
-			Toast.makeText(context, "I would complete " + desc, Toast.LENGTH_LONG).show();
+			t.setDone(true);
 			return true;
 		default:
 			return super.onContextItemSelected(item);
