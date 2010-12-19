@@ -16,9 +16,6 @@ import android.os.Message;
 import org.xml.sax.SAXException;
 
 public class TracksCommunicator extends HandlerThread {
-	public static final int FETCH_TASKS = 0;
-	public static final int COMPLETE_TASK = 1;
-	
 	private Handler _handler;
 	private SharedPreferences _prefs;
 	private Semaphore _ready;
@@ -45,11 +42,13 @@ public class TracksCommunicator extends HandlerThread {
 		return _handler;
 	}
 
-	private void fetchTasks(Handler replyTo) {
+	private void fetchTasks(TracksAction act) {
 		final String server = _prefs.getString(PreferenceConstants.SERVER, null);
 		final String username = _prefs.getString(PreferenceConstants.USERNAME, null);
 		final String password = _prefs.getString(PreferenceConstants.PASSWORD, null);
 
+		Handler replyTo = act.notify;
+		
 		if(server == null || username == null || password == null) {
 			Message.obtain(replyTo, 1, "Please Check Your Preferences").sendToTarget();
 			return;
@@ -94,16 +93,46 @@ public class TracksCommunicator extends HandlerThread {
 		
 		Message.obtain(replyTo, 2).sendToTarget();
 	}
+
+	private void completeTask(TracksAction act) {
+		final String server = _prefs.getString(PreferenceConstants.SERVER, null);
+		final String username = _prefs.getString(PreferenceConstants.USERNAME, null);
+		final String password = _prefs.getString(PreferenceConstants.PASSWORD, null);
+
+		Task t = (Task)act.target;
+
+		Authenticator.setDefault(new Authenticator() {
+				protected PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(username, password.toCharArray());
+				}
+			});
+
+		try {
+			HttpURLConnection h;
+			h = (HttpURLConnection)(new URL("http://" + server + "/todos/" +
+											String.valueOf(t.getId()) + "/toggle_check.xml").openConnection());
+			h.setRequestMethod("PUT");
+			h.getResponseCode();
+		} catch(Exception e) {
+			return;
+		}
+		
+		t.remove();
+		act.notify.sendEmptyMessage(0);
+	}
 	
 	private class CommHandler extends Handler {
 		@Override
 		public void handleMessage(Message msg) {
-			switch(msg.what) {
+			TracksAction act = (TracksAction)msg.obj;
+			
+			switch(act.type) {
 			case FETCH_TASKS:
-				fetchTasks((Handler)msg.obj);
+				fetchTasks(act);
 				break;
 				
 			case COMPLETE_TASK:
+				completeTask(act);
 				break;
 			}
 		}

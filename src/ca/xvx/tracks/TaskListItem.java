@@ -4,6 +4,7 @@ import android.content.Context;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 public class TaskListItem extends RelativeLayout {
 	private TextView _name;
@@ -29,14 +30,11 @@ public class TaskListItem extends RelativeLayout {
 		}
 		_info.setText(infos);
 
-		/*
-		_done.setOnCheckedChangedListener(new CompoundButton.OnCheckedChangedListener() {
+		_done.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 				public void onCheckedChanged(CompoundButton b, boolean checked) {
 					_task.setDone(checked);
-					
 				}
 			});
-		*/
 	}
 
 	protected Task getTask() {

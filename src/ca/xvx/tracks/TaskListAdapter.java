@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Vector;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +17,26 @@ public class TaskListAdapter extends BaseExpandableListAdapter {
 	private Vector<TodoContext> _contexts;
 	private Map<TodoContext, Vector<Task>> _tasks;
 
+	private Handler _notifyHandler;
+
 	public TaskListAdapter() {
 		super();
 
 		_contexts = new Vector<TodoContext>();
 		_tasks = new HashMap<TodoContext, Vector<Task>>();
+	}
+
+	public Handler getNotifyHandler() {
+		if(_notifyHandler == null) {
+			_notifyHandler = new Handler() {
+					@Override
+					public void handleMessage(Message msg) {
+						notifyDataSetChanged();
+					}
+				};
+		}
+
+		return _notifyHandler;
 	}
 
 	@Override

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.widget.CompoundButton;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 import android.view.ContextMenu;
@@ -48,7 +49,7 @@ public class TaskListActivity extends ExpandableListActivity {
 	private void refreshList() {
 		final Context context = getExpandableListView().getContext();
 		final ProgressDialog p = ProgressDialog.show(context, "", "", true);
-		Message.obtain(_commHandler, TracksCommunicator.FETCH_TASKS, new Handler() {
+		TracksAction a = new TracksAction(TracksAction.ActionType.FETCH_TASKS, null, new Handler() {
 				@Override
 				public void handleMessage(Message msg) {
 					switch(msg.what) {
@@ -62,17 +63,25 @@ public class TaskListActivity extends ExpandableListActivity {
 					case 2:
 						_tla.notifyDataSetChanged();
 						p.dismiss();
-						
-						for(int g = 0; g < _tla.getGroupCount(); g++) {
+
+						int ngroups = _tla.getGroupCount();
+						for(int g = 0; g < ngroups; g++) {
 							if(!((TodoContext)_tla.getGroup(g)).isHidden()) {
 								getExpandableListView().expandGroup(g);
 							}
 						}
+
+						for(Task t : Task.getAllTasks()) {
+							t.setChangeHandler(_commHandler, _tla.getNotifyHandler());
+						}
+						
+						registerForContextMenu(getExpandableListView());
+						break;
 					}
 				}
-			}).sendToTarget();
-				
-		registerForContextMenu(getExpandableListView());
+			});
+		
+		Message.obtain(_commHandler, 0, a).sendToTarget();
 	}
 
 	@Override

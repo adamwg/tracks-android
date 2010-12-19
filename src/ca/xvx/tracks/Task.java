@@ -1,6 +1,8 @@
 package ca.xvx.tracks;
 
 import android.util.Log;
+import android.os.Handler;
+import android.os.Message;
 
 import java.util.Collection;
 import java.util.Date;
@@ -16,6 +18,11 @@ public class Task {
 	private Date _due;
 	private Date _showFrom;
 	private boolean _done;
+
+	private Handler _changeHandler;
+	private Handler _notifyHandler;
+
+	private TracksAction _doneAction;
 	
 	private static final Map<Integer, Task> TASKS = new HashMap<Integer, Task>();
 	
@@ -33,6 +40,11 @@ public class Task {
 		_showFrom = showFrom;
 
 		TASKS.put(id, this);
+	}
+
+	public void setChangeHandler(Handler c, Handler n) {
+		_changeHandler = c;
+		_notifyHandler = n;
 	}
 	
 	public int getId() {
@@ -97,9 +109,19 @@ public class Task {
 
 	public void setDone(boolean done) {
 		_done = done;
+
+		if(done) {
+			_doneAction = new TracksAction(TracksAction.ActionType.COMPLETE_TASK, this, _notifyHandler);
+			Message m = _changeHandler.obtainMessage(0, _doneAction);
+			_changeHandler.sendMessageDelayed(m, 500);
+		} else {
+			_changeHandler.removeMessages(0, _doneAction);
+		}
 	}
 
-	
+	public void remove() {
+		TASKS.remove(_id);
+	}
 	
 	public static Task getTask(int id) {
 		return TASKS.get(id);
