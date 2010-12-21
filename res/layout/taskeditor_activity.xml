@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  android:layout_width="fill_parent"
+			  android:layout_height="fill_parent"
+			  android:orientation="vertical">
+
+  <TextView android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/TEA_description" />
+  <EditText android:id="@+id/TEA_description"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text=""
+			android:autoText="true"
+			android:capitalize="sentences" 
+			android:singleLine="true" />
+  
+  <TextView android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/TEA_notes" />
+  <EditText android:id="@+id/TEA_notes"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:lines="3"
+			android:gravity="top"
+			android:text=""
+			android:autoText="true"
+			android:capitalize="sentences" />
+
+  <TextView android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/TEA_project" />
+  <Spinner android:id="@+id/TEA_project"
+		   android:layout_width="fill_parent"
+		   android:layout_height="wrap_content"
+		   android:prompt="@string/TEA_project" />
+
+  <TextView android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/TEA_context" />
+  <Spinner android:id="@+id/TEA_context"
+		   android:layout_width="fill_parent"
+		   android:layout_height="wrap_content"
+		   android:prompt="@string/TEA_context" />
+
+  <TableLayout android:layout_width="fill_parent"
+			   android:layout_height="wrap_content"
+			   android:orientation="horizontal"
+			   android:stretchColumns="*">
+
+	<TableRow>
+	  <TextView android:layout_width="0dip"
+				android:layout_weight="1"
+				android:layout_height="wrap_content"
+				android:text="@string/TEA_due_date" />
+	  <TextView android:layout_width="0dip"
+				android:layout_weight="1"
+				android:layout_height="wrap_content"
+				android:text="@string/TEA_show_from" />
+	</TableRow>
+
+	<TableRow>
+	  <Button android:id="@+id/TEA_due_date"
+			  android:layout_width="0dip"
+			  android:layout_weight="1"
+			  android:layout_height="wrap_content"
+			  android:text="" />
+	  
+	  <Button android:id="@+id/TEA_show_from"
+			  android:layout_width="0dip"
+			  android:layout_weight="1"
+			  android:layout_height="wrap_content"
+			  android:text="" />
+	</TableRow>
+
+	<TableRow>
+	  <Button android:id="@+id/TEA_save"
+			  android:layout_width="0dip"
+			  android:layout_weight="1"
+			  android:layout_height="wrap_content"
+			  android:text="@string/TEA_save" />
+	  
+	  <Button android:id="@+id/TEA_cancel"
+			  android:layout_width="0dip"
+			  android:layout_weight="1"
+			  android:layout_height="wrap_content"
+			  android:text="@string/TEA_cancel" />
+	</TableRow>
+  </TableLayout>
+
+</LinearLayout>

@@ -4,17 +4,17 @@
 	<EditTextPreference android:defaultValue=""
 						android:singleLine="true"
 						android:inputType="textUri"
-						android:title="Server Address"
-						android:summary="Hostname or IP Address"
+						android:title="@string/SETTINGS_server"
+						android:summary="@string/SETTINGS_server_summary"
 						android:key="server" />
 	<EditTextPreference android:defaultValue=""
 						android:singleLine="true"
 						android:inputType="textNoSuggestions"
-						android:title="Username"
+						android:title="@string/SETTINGS_username"
 						android:key="username" />
 	<EditTextPreference android:defaultValue=""
 						android:singleLine="true"
-						android:title="Password"
+						android:title="@string/SETTINGS_password"
 						android:password="true"
 						android:key="password" />
   </PreferenceCategory>

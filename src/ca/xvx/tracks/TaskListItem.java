@@ -16,12 +16,15 @@ public class TaskListItem extends RelativeLayout {
 	public TaskListItem(Context c, Task t) {
 		super(c);
 
+		if(t == null) {
+			return;
+		}
 		_task = t;
 
 		addView(inflate(c, R.layout.tasklist_item, null));
-		_name = (TextView)findViewById(R.id.task_name);
-		_info = (TextView)findViewById(R.id.task_info);
-		_done = (CheckBox)findViewById(R.id.task_done);
+		_name = (TextView)findViewById(R.id.TLI_name);
+		_info = (TextView)findViewById(R.id.TLI_info);
+		_done = (CheckBox)findViewById(R.id.TLI_done);
 
 		_name.setText(_task.getDescription());
 		String infos = "";

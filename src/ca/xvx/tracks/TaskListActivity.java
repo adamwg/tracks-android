@@ -24,6 +24,8 @@ public class TaskListActivity extends ExpandableListActivity {
 	private Handler _commHandler;
 
 	private static final int INIT_SETTINGS = 1;
+	private static final int NEW_TASK = 2;
+	private static final int EDIT_TASK = 2;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -53,14 +55,25 @@ public class TaskListActivity extends ExpandableListActivity {
 				@Override
 				public void handleMessage(Message msg) {
 					switch(msg.what) {
-					case 0:
-						p.setMessage((String)msg.obj);
+					case TracksCommunicator.FETCH_CODE:
+						p.setMessage(getString(R.string.MSG_fetching));
 						break;
-					case 1:
+					case TracksCommunicator.PARSE_CODE:
+						p.setMessage(getString(R.string.MSG_parsing));
+						break;
+					case TracksCommunicator.PREFS_FAIL_CODE:
 						p.dismiss();
-						Toast.makeText(context, (String)msg.obj, Toast.LENGTH_LONG).show();
+						Toast.makeText(context, getString(R.string.ERR_badprefs), Toast.LENGTH_LONG).show();
 						break;
-					case 2:
+					case TracksCommunicator.PARSE_FAIL_CODE:
+						p.dismiss();
+						Toast.makeText(context, getString(R.string.ERR_parse), Toast.LENGTH_LONG).show();
+						break;
+					case TracksCommunicator.FETCH_FAIL_CODE:
+						p.dismiss();
+						Toast.makeText(context, getString(R.string.ERR_fetch), Toast.LENGTH_LONG).show();
+						break;
+					case TracksCommunicator.SUCCESS_CODE:
 						_tla.notifyDataSetChanged();
 						p.dismiss();
 
@@ -108,7 +121,9 @@ public class TaskListActivity extends ExpandableListActivity {
 		
 		switch(item.getItemId()) {
 		case R.id.edit_task:
-			Toast.makeText(context, "I would edit " + desc, Toast.LENGTH_LONG).show();
+			Intent i = new Intent(this, TaskEditorActivity.class);
+			i.putExtra("task", t.getId());
+			startActivityForResult(i, EDIT_TASK);
 			return true;
 		case R.id.delete_task:
 			Toast.makeText(context, "I would delete " + desc, Toast.LENGTH_LONG).show();
@@ -131,7 +146,11 @@ public class TaskListActivity extends ExpandableListActivity {
 	@Override
 	public boolean onChildClick(ExpandableListView l, View view, int group, int position, long id) {
 		Task t = (Task)_tla.getChild(group, position);
-		Toast.makeText(l.getContext(), t.getDescription(), Toast.LENGTH_SHORT).show();
+
+		Intent i = new Intent(this, TaskEditorActivity.class);
+		i.putExtra("task", t.getId());
+		startActivityForResult(i, EDIT_TASK);
+		
 		return true;
 	}
 
@@ -145,10 +164,13 @@ public class TaskListActivity extends ExpandableListActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
-		case R.id.settings:
+		case R.id.MENU_add:
+			startActivityForResult(new Intent(this, TaskEditorActivity.class), NEW_TASK);
+			return true;
+		case R.id.MENU_settings:
 			startActivityForResult(new Intent(this, SettingsActivity.class), INIT_SETTINGS);
 			return true;
-		case R.id.refresh:
+		case R.id.MENU_refresh:
 			refreshList();
 			return true;
 		default:

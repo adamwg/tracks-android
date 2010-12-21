@@ -1,13 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="password">Password</string>
-    <string name="username">Username</string>
-    <string name="server">Server</string>
-    <string name="app_name">Tracks</string>
-	<string name="err_badprefs">Please Check Your Settings</string>
-	<string name="settings">Settings</string>
-	<string name="refresh">Refresh</string>
-	<string name="delete_task">Delete Action</string>
-	<string name="edit_task">Edit Action</string>
-	<string name="done_task">Complete Action</string>
+  <string name="APP_name">Tracks</string>
+  
+  <string name="SETTINGS_password">Password</string>
+  <string name="SETTINGS_username">Username</string>
+  <string name="SETTINGS_server">Server Address</string>
+  <string name="SETTINGS_server_summary">Hostname or IP Address</string>
+
+  <string name="ERR_badprefs">Please Check Your Settings</string>
+  <string name="ERR_parse">Parse Error</string>
+  <string name="ERR_fetch">Fetch Error</string>
+
+  <string name="MSG_fetching">Fetching Data</string>  
+  <string name="MSG_parsing">Parsing Data</string>
+  
+  <string name="MENU_settings">Settings</string>
+  <string name="MENU_refresh">Refresh</string>
+  <string name="MENU_add">Add Task</string>
+  
+  <string name="delete_task">Delete Action</string>
+  <string name="edit_task">Edit Action</string>
+  <string name="done_task">Complete Action</string>
+  
+  <string name="TEA_description">Description</string>
+  <string name="TEA_notes">Notes</string>
+  <string name="TEA_project">Project</string>
+  <string name="TEA_context">Context</string>
+  <string name="TEA_due_date">Due</string>
+  <string name="TEA_show_from">Show From</string>
+  <string name="TEA_save">Save</string>
+  <string name="TEA_cancel">Cancel</string>
 </resources>

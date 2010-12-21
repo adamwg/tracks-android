@@ -20,6 +20,13 @@ public class TracksCommunicator extends HandlerThread {
 	private SharedPreferences _prefs;
 	private Semaphore _ready;
 
+	public static final int FETCH_CODE = 0;
+	public static final int PARSE_CODE = 1;
+	public static final int PARSE_FAIL_CODE = 2;
+	public static final int FETCH_FAIL_CODE = 3;
+	public static final int PREFS_FAIL_CODE = 4;
+	public static final int SUCCESS_CODE = 5;
+
 	public TracksCommunicator(SharedPreferences prefs) {
 		super("Tracks Communicator");
 		_prefs = prefs;
@@ -50,14 +57,14 @@ public class TracksCommunicator extends HandlerThread {
 		Handler replyTo = act.notify;
 		
 		if(server == null || username == null || password == null) {
-			Message.obtain(replyTo, 1, "Please Check Your Preferences").sendToTarget();
+			Message.obtain(replyTo, PREFS_FAIL_CODE).sendToTarget();
 			return;
 		}
 		
 		HttpURLConnection h;
 		InputStream[] ret = new InputStream[3];
 
-		Message.obtain(replyTo, 0, "Fetching Data").sendToTarget();
+		Message.obtain(replyTo, FETCH_CODE).sendToTarget();
 
 		Authenticator.setDefault(new Authenticator() {
 				protected PasswordAuthentication getPasswordAuthentication() {
@@ -73,25 +80,25 @@ public class TracksCommunicator extends HandlerThread {
 			h = (HttpURLConnection)(new URL("http://" + server + "/todos.xml").openConnection());
 			ret[2] = h.getInputStream();
 		} catch(Exception e) {
-			Message.obtain(replyTo, 1, "Could not Connect to Server").sendToTarget();
+			Message.obtain(replyTo, FETCH_FAIL_CODE).sendToTarget();
 			return;
 		}
 
-		Message.obtain(replyTo, 0, "Parsing Data").sendToTarget();
+		Message.obtain(replyTo, PARSE_CODE).sendToTarget();
 		
 		try {
 			Xml.parse(ret[0], Xml.Encoding.UTF_8, new ContextXmlHandler());
 			Xml.parse(ret[1], Xml.Encoding.UTF_8, new ProjectXmlHandler());
 			Xml.parse(ret[2], Xml.Encoding.UTF_8, new TaskXmlHandler());
 		} catch(IOException e) {
-			Message.obtain(replyTo, 1, "Failed to Get XML").sendToTarget();
+			Message.obtain(replyTo, FETCH_FAIL_CODE).sendToTarget();
 			return;
 		} catch(SAXException e) {
-			Message.obtain(replyTo, 1, "Failed to Parse Data").sendToTarget();
+			Message.obtain(replyTo, PARSE_FAIL_CODE).sendToTarget();
 			return;
 		}
 		
-		Message.obtain(replyTo, 2).sendToTarget();
+		Message.obtain(replyTo, SUCCESS_CODE).sendToTarget();
 	}
 
 	private void completeTask(TracksAction act) {
