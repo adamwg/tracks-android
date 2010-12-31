@@ -129,6 +129,27 @@ public class TracksCommunicator extends HandlerThread {
 		act.notify.sendEmptyMessage(0);
 	}
 
+	private void deleteTask(TracksAction act) {
+		final String server = _prefs.getString(PreferenceConstants.SERVER, null);
+		final String username = _prefs.getString(PreferenceConstants.USERNAME, null);
+		final String password = _prefs.getString(PreferenceConstants.PASSWORD, null);
+
+		Task t = (Task)act.target;
+		HttpResponse r;
+
+		try {
+			r = HttpConnection.delete(new URI("http", server, "/todos/" +
+											  String.valueOf(t.getId()) + ".xml", null),
+									  username,
+									  password);
+		} catch(Exception e) {
+			return;
+		}
+		
+		t.remove();
+		act.notify.sendEmptyMessage(0);
+	}
+
 	private void updateTask(TracksAction act) {
 		final String server = _prefs.getString(PreferenceConstants.SERVER, null);
 		final String username = _prefs.getString(PreferenceConstants.USERNAME, null);
@@ -217,6 +238,10 @@ public class TracksCommunicator extends HandlerThread {
 
 			case UPDATE_TASK:
 				updateTask(act);
+				break;
+
+			case DELETE_TASK:
+				deleteTask(act);
 				break;
 			}
 		}

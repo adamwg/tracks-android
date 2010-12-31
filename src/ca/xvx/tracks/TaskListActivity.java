@@ -122,7 +122,9 @@ public class TaskListActivity extends ExpandableListActivity {
 			startActivityForResult(i, EDIT_TASK);
 			return true;
 		case R.id.delete_task:
-			Toast.makeText(context, "I would delete " + desc, Toast.LENGTH_LONG).show();
+			TracksAction a = new TracksAction(TracksAction.ActionType.DELETE_TASK, t,
+											  _tla.getNotifyHandler());
+			Message.obtain(_commHandler, 0, a).sendToTarget();			
 			return true;
 		case R.id.done_task:
 			t.setDone(true);

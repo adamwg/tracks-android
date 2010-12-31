@@ -15,6 +15,7 @@ import org.apache.http.auth.AuthState;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpPost;
@@ -51,6 +52,11 @@ public class HttpConnection {
 	public static HttpResponse get(URI uri, String username, String password) throws Exception {
 		HttpGet g = new HttpGet(uri);
 		return go(uri.getHost(), g, username, password);
+	}
+
+	public static HttpResponse delete(URI uri, String username, String password) throws Exception {
+		HttpDelete d = new HttpDelete(uri);
+		return go(uri.getHost(), d, username, password);
 	}
 
 	public static HttpResponse put(URI uri, String username, String password, String content) throws Exception {
