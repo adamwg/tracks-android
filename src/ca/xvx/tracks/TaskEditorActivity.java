@@ -131,11 +131,27 @@ public class TaskEditorActivity extends Activity {
 					showDialog(DUE);
 				}
 			});
+		_dueButt.setOnLongClickListener(new View.OnLongClickListener() {
+				@Override
+				public boolean onLongClick(View v) {
+					_dueButt.setText("");
+					_due = null;
+					return true;
+				}
+			});
 		
 		_showButt.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					showDialog(SHOW_FROM);
+				}
+			});
+		_showButt.setOnLongClickListener(new View.OnLongClickListener() {
+				@Override
+				public boolean onLongClick(View v) {
+					_showButt.setText("");
+					_showfrom = null;
+					return true;
 				}
 			});
 	}

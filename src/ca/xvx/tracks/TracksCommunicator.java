@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.concurrent.Semaphore;
 import org.apache.http.HttpResponse;
 import org.xml.sax.SAXException;
@@ -32,6 +33,8 @@ public class TracksCommunicator extends HandlerThread {
 	public static final int FETCH_FAIL_CODE = 4;
 	public static final int PREFS_FAIL_CODE = 5;
 	public static final int UPDATE_FAIL_CODE = 6;
+
+	private static final SimpleDateFormat DATEFORM = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
 	public TracksCommunicator(SharedPreferences prefs) {
 		super("Tracks Communicator");
@@ -174,14 +177,18 @@ public class TracksCommunicator extends HandlerThread {
 		if(t.getDue() == null) {
 			xml.append(" nil=\"true\"></due>");
 		} else {
-			xml.append(">"); xml.append(t.getDue()); xml.append("</due>");
+			xml.append(">");
+			xml.append(DATEFORM.format(t.getDue()));
+			xml.append("</due>");
 		}
 		
 		xml.append("<show-from type=\"datetime\"");
 		if(t.getShowFrom() == null) {
 			xml.append(" nil=\"true\"></show-from>");
 		} else {
-			xml.append(">"); xml.append(t.getShowFrom()); xml.append("</show-from>");
+			xml.append(">");
+			xml.append(DATEFORM.format(t.getShowFrom()));
+			xml.append("</show-from>");
 		}
 
 		xml.append("</todo>");
