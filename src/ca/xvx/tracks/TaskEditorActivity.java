@@ -1,5 +1,7 @@
 package ca.xvx.tracks;
 
+import android.util.Log;
+
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -19,11 +21,12 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 
 public class TaskEditorActivity extends Activity {
+	private static final String TAG = "TaskEditorActivity";
+	
 	private EditText _description;
 	private EditText _notes;
 	private Spinner _project;
@@ -113,6 +116,7 @@ public class TaskEditorActivity extends Activity {
 		saveButt.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					Log.v(TAG, "Edit saved");
 					save();
 				}
 			});
@@ -120,6 +124,7 @@ public class TaskEditorActivity extends Activity {
 		cancelButt.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					Log.v(TAG, "Edit cancelled");
 					setResult(CANCELED);
 					finish();
 				}
@@ -128,12 +133,14 @@ public class TaskEditorActivity extends Activity {
 		_dueButt.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					Log.v(TAG, "Due pressed");
 					showDialog(DUE);
 				}
 			});
 		_dueButt.setOnLongClickListener(new View.OnLongClickListener() {
 				@Override
 				public boolean onLongClick(View v) {
+					Log.v(TAG, "Due cleared");
 					_dueButt.setText("");
 					_due = null;
 					return true;
@@ -143,12 +150,14 @@ public class TaskEditorActivity extends Activity {
 		_showButt.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					Log.v(TAG, "Show from pressed");
 					showDialog(SHOW_FROM);
 				}
 			});
 		_showButt.setOnLongClickListener(new View.OnLongClickListener() {
 				@Override
 				public boolean onLongClick(View v) {
+					Log.v(TAG, "Show from cleared");
 					_showButt.setText("");
 					_showfrom = null;
 					return true;
@@ -163,6 +172,8 @@ public class TaskEditorActivity extends Activity {
 		final Date oldDue, oldShowFrom;
 		final Context context = this;
 
+		Log.d(TAG, "Saving task!");
+		
 		Project newProject = (Project)_project.getSelectedItem();
 		if(newProject.getId() < 0) {
 			newProject = null;
@@ -171,10 +182,13 @@ public class TaskEditorActivity extends Activity {
 		
 		// Must have a description
 		if(_description.length() <= 0) {
+			Log.w(TAG, "Attempted to save with no description");
 			Toast.makeText(context, R.string.ERR_save_baddata, Toast.LENGTH_LONG).show();
+			return;
 		}
 
 		if(_task == null) {
+			Log.d(TAG, "Creating a new task");
 			_task = new Task(_description.getText().toString(), _notes.getText().toString(), newContext,
 							 newProject, _due, _showfrom);
 			oldDesc = _task.getDescription();
@@ -184,6 +198,7 @@ public class TaskEditorActivity extends Activity {
 			oldDue = _task.getDue();
 			oldShowFrom = _task.getShowFrom();
 		} else {
+			Log.d(TAG, "Updating an existing task");
 			oldDesc = _task.setDescription(_description.getText().toString());
 			oldNotes = _task.setNotes(_notes.getText().toString());
 			oldContext = _task.setContext(newContext);
@@ -198,11 +213,13 @@ public class TaskEditorActivity extends Activity {
 				public void handleMessage(Message msg) {
 					switch(msg.what) {
 					case TracksCommunicator.SUCCESS_CODE:
+						Log.d(TAG, "Saved successfully");
 						p.dismiss();
 						setResult(SAVED);
 						finish();
 						break;
 					case TracksCommunicator.UPDATE_FAIL_CODE:
+						Log.w(TAG, "Save failed");
 						p.dismiss();
 						Toast.makeText(context, R.string.ERR_save_general, Toast.LENGTH_LONG).show();
 						// Reset task data to stay synced with server.

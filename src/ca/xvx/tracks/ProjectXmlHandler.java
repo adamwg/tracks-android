@@ -1,9 +1,13 @@
 package ca.xvx.tracks;
 
+import android.util.Log;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class ProjectXmlHandler extends DefaultHandler {
+	private static final String TAG = "ProjectXmlHandler";
+	
 	private int _id;
 	private String _name;
 	private String _description;
@@ -35,7 +39,9 @@ public class ProjectXmlHandler extends DefaultHandler {
 		if(qName.equals("project")) {
 			try {
 				new Project(_id, _name, _description, _position, _state, _defaultContext);
-			} catch(DuplicateProjectException e) { }
+			} catch(DuplicateProjectException e) {
+				Log.w(TAG, "Tried to add the same project twice, id: " + String.valueOf(_id), e);
+			}
 		} else if(qName.equals("id")) {
 			_id = Integer.valueOf(_text.toString());
 		} else if(qName.equals("name")) {
@@ -57,6 +63,7 @@ public class ProjectXmlHandler extends DefaultHandler {
 			try {
 				_defaultContext = TodoContext.getContext(Integer.valueOf(_text.toString()));
 			} catch(NumberFormatException e) {
+				Log.w(TAG, "Unexpected number format: " + _text.toString(), e);
 				_defaultContext = null;
 			}
 		}

@@ -1,10 +1,5 @@
 package ca.xvx.tracks;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Vector;
-
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
@@ -13,6 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Vector;
 
 public class TaskListAdapter extends BaseExpandableListAdapter {
 	private Vector<TodoContext> _contexts;

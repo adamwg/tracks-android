@@ -1,5 +1,7 @@
 package ca.xvx.tracks;
 
+import android.util.Log;
+
 import android.app.ExpandableListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -9,16 +11,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.widget.CompoundButton;
-import android.widget.ExpandableListView;
-import android.widget.Toast;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ExpandableListView;
+import android.widget.Toast;
 
 public class TaskListActivity extends ExpandableListActivity {
+	private static final String TAG = "TaskListActivity";
+	
 	private TaskListAdapter _tla;
 	private SharedPreferences _prefs;
 	private Handler _commHandler;
@@ -31,6 +34,8 @@ public class TaskListActivity extends ExpandableListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		Log.v(TAG, "Created!");
 		
 		_prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -40,10 +45,14 @@ public class TaskListActivity extends ExpandableListActivity {
 		
 		_tla = new TaskListAdapter();
 		setListAdapter(_tla);
+		
 		if(!_prefs.getBoolean(PreferenceConstants.RUN, false)) {
+			Log.i(TAG, "This appears to be our first run; edit preferences");
+			
 			_prefs.edit().putBoolean(PreferenceConstants.RUN, true).commit();
 			startActivityForResult(new Intent(this, SettingsActivity.class), SETTINGS);
 		} else {
+			Log.v(TAG, "Fetching tasks");
 			refreshList();
 		}
 	}
@@ -137,12 +146,16 @@ public class TaskListActivity extends ExpandableListActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if(requestCode == SETTINGS) {
+			Log.v(TAG, "Returned from settings");
 			refreshList();
 		}
 		
-		if((requestCode == NEW_TASK || requestCode == EDIT_TASK) &&
-		   resultCode == TaskEditorActivity.SAVED) {
-			_tla.notifyDataSetChanged();
+		if(requestCode == NEW_TASK || requestCode == EDIT_TASK) {
+			Log.v(TAG, "Returned from edit");
+			if(resultCode == TaskEditorActivity.SAVED) {
+				Log.v(TAG, "Task was saved");
+				_tla.notifyDataSetChanged();
+			}
 		}
 	}
 

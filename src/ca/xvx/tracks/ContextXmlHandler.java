@@ -1,9 +1,13 @@
 package ca.xvx.tracks;
 
+import android.util.Log;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class ContextXmlHandler extends DefaultHandler {
+	private static final String TAG = "ContextXmlHandler";
+	
 	private int _id;
 	private String _name;
 	private boolean _hide;
@@ -32,7 +36,9 @@ public class ContextXmlHandler extends DefaultHandler {
 		if(qName.equals("context")) {
 			try {
 				new TodoContext(_id, _name, _position, _hide);
-			} catch(DuplicateContextException e) { }
+			} catch(DuplicateContextException e) {
+				Log.w(TAG, "Tried to add the same context twice, id: " + String.valueOf(_id), e);
+			}
 		} else if(qName.equals("id")) {
 			_id = Integer.valueOf(_text.toString());
 		} else if(qName.equals("name")) {

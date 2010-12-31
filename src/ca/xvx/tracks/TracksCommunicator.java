@@ -1,27 +1,27 @@
 package ca.xvx.tracks;
 
+import android.util.Log;
+
 import ca.xvx.tracks.util.HttpConnection;
 
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Looper;
 import android.os.Message;
-import android.util.Base64;
-import android.util.Log;
 import android.util.Xml;
-import java.io.BufferedOutputStream;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.concurrent.Semaphore;
+
 import org.apache.http.HttpResponse;
 import org.xml.sax.SAXException;
 
 public class TracksCommunicator extends HandlerThread {
+	private static final String TAG = "TracksCommunicator";
+	
 	private static Handler _handler;
 	private static SharedPreferences _prefs;
 	private static Semaphore _ready;
@@ -47,6 +47,7 @@ public class TracksCommunicator extends HandlerThread {
 	protected void onLooperPrepared() {
 		_handler = new CommHandler();
 		_ready.release();
+		Log.v(TAG, "Ready");
 	}
 
 	public static Handler getHandler() {
@@ -62,6 +63,8 @@ public class TracksCommunicator extends HandlerThread {
 		final String server = _prefs.getString(PreferenceConstants.SERVER, null);
 		final String username = _prefs.getString(PreferenceConstants.USERNAME, null);
 		final String password = _prefs.getString(PreferenceConstants.PASSWORD, null);
+
+		Log.d(TAG, "Fetching tasks");
 
 		Handler replyTo = act.notify;
 		
@@ -88,7 +91,7 @@ public class TracksCommunicator extends HandlerThread {
 								   username, password);
 			ret[2] = r.getEntity().getContent();
 		} catch(Exception e) {
-			Log.w("TC", e);
+			Log.w(TAG, "Failed to fetch tasks!", e);
 			Message.obtain(replyTo, FETCH_FAIL_CODE).sendToTarget();
 			return;
 		}
@@ -100,9 +103,11 @@ public class TracksCommunicator extends HandlerThread {
 			Xml.parse(ret[1], Xml.Encoding.UTF_8, new ProjectXmlHandler());
 			Xml.parse(ret[2], Xml.Encoding.UTF_8, new TaskXmlHandler());
 		} catch(IOException e) {
+			Log.w(TAG, "Failed to read XML!", e);
 			Message.obtain(replyTo, FETCH_FAIL_CODE).sendToTarget();
 			return;
 		} catch(SAXException e) {
+			Log.w(TAG, "Failed to parse XML!", e);
 			Message.obtain(replyTo, PARSE_FAIL_CODE).sendToTarget();
 			return;
 		}
@@ -117,6 +122,8 @@ public class TracksCommunicator extends HandlerThread {
 
 		Task t = (Task)act.target;
 		HttpResponse r;
+
+		Log.d(TAG, "Marking task " + String.valueOf(t.getId()) + " as done");
 
 		try {
 			r = HttpConnection.put(new URI("http", server, "/todos/" +
@@ -140,6 +147,8 @@ public class TracksCommunicator extends HandlerThread {
 		Task t = (Task)act.target;
 		HttpResponse r;
 
+		Log.d(TAG, "Deleting task " + String.valueOf(t.getId()));
+
 		try {
 			r = HttpConnection.delete(new URI("http", server, "/todos/" +
 											  String.valueOf(t.getId()) + ".xml", null),
@@ -159,6 +168,8 @@ public class TracksCommunicator extends HandlerThread {
 		final String password = _prefs.getString(PreferenceConstants.PASSWORD, null);
 
 		Task t = (Task)act.target;
+
+		Log.d(TAG, "Updating task " + String.valueOf(t.getId()));
 
 		StringBuilder xml = new StringBuilder("<todo>");
 		xml.append("<description>"); xml.append(t.getDescription()); xml.append("</description>");
@@ -193,16 +204,18 @@ public class TracksCommunicator extends HandlerThread {
 
 		xml.append("</todo>");
 
-		Log.i("TC", xml.toString());
-		
+		Log.v(TAG, "Sending: " + xml.toString());
+
 		try {
 			HttpResponse r;
 			int resp;
 
 			if(t.getId() < 0) {
+				Log.v(TAG, "Posting to todos.xml to create new task");
 				r = HttpConnection.post(new URI("http", server, "/todos.xml", null), username, password,
 										xml.toString());
 			} else {
+				Log.v(TAG, "Putting to update existing task");
 				r = HttpConnection.put(new URI("http", server,
 											   "/todos/" + String.valueOf(t.getId()) + ".xml", null),
 									   username, password, xml.toString());
@@ -211,20 +224,22 @@ public class TracksCommunicator extends HandlerThread {
 			resp = r.getStatusLine().getStatusCode();
 
 			if(resp == 200) {
+				Log.d(TAG, "Successfully updated task");
 				act.notify.sendEmptyMessage(SUCCESS_CODE);
 			} else if(resp == 201) {
+				Log.d(TAG, "Successfully created task.");
 				String got = r.getFirstHeader("Location").getValue();
-				Log.i("TC", got);
 				got = got.substring(got.lastIndexOf('/') + 1);
 				int tno = Integer.parseInt(got);
 				t.setId(tno);
+				Log.d(TAG, "ID of new task is: " + String.valueOf(tno));
 				act.notify.sendEmptyMessage(SUCCESS_CODE);
 			} else {
+				Log.w(TAG, "Unexpected response from server: " + String.valueOf(resp));
 				act.notify.sendEmptyMessage(UPDATE_FAIL_CODE);
-				Log.i("TC", "Unexpected resp: " + String.valueOf(resp));
 			}
 		} catch(Exception e) {
-			Log.w("TC", e);
+			Log.w(TAG, "Error updating task", e);
 			act.notify.sendEmptyMessage(UPDATE_FAIL_CODE);
 		}
 	}

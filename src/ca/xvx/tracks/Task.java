@@ -1,8 +1,5 @@
 package ca.xvx.tracks;
 
-import android.util.Log;
-import android.os.Message;
-
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -155,7 +152,6 @@ public class Task implements Comparable<Task> {
 	}
 
 	public static Collection<Task> getAllTasks() {
-		Log.i("Task", "There are " + TASKS.size() + " tasks");
 		return TASKS.values();
 	}
 }

@@ -1,13 +1,18 @@
 package ca.xvx.tracks;
 
-import java.util.Date;
+import android.util.Log;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class TaskXmlHandler extends DefaultHandler {
+	private static final String TAG = "TaskXmlHandler";
+	
 	private int _id;
 	private String _description;
 	private String _notes;
@@ -44,6 +49,7 @@ public class TaskXmlHandler extends DefaultHandler {
 			try {
 				new Task(_id, _description, _notes, _context, _project, _due, _showFrom);
 			} catch(DuplicateTaskException e) {
+				Log.w(TAG, "Tried to add the same task twice, id: " + String.valueOf(_id), e);
 			}
 		} else if(qName.equals("id")) {
 			_id = Integer.valueOf(_text.toString());
@@ -60,11 +66,15 @@ public class TaskXmlHandler extends DefaultHandler {
 		} else if(qName.equals("due")) {
 			try {
 				_due = DATEFORM.parse(_text.toString());
-			} catch(ParseException e) { }
+			} catch(ParseException e) {
+				Log.w(TAG, "Unexpected date format: " + _text.toString(), e);
+			}
 		} else if(qName.equals("show-from")) {
 			try {
 				_showFrom = DATEFORM.parse(_text.toString());
-			} catch(ParseException e) { }
+			} catch(ParseException e) {
+				Log.w(TAG, "Unexpected date format: " + _text.toString(), e);
+			}
 		}
 	}
 

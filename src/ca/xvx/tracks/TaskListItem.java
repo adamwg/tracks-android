@@ -4,10 +4,10 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.text.format.DateFormat;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.Calendar;
 

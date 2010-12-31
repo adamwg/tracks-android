@@ -1,10 +1,10 @@
 package ca.xvx.tracks.util;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.net.URI;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpRequestInterceptor;
@@ -17,8 +17,8 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.auth.BasicScheme;
@@ -31,6 +31,8 @@ import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
 
 public class HttpConnection {
+	private static final String TAG = "HttpConnection";
+	
 	private static HttpResponse go(String host, HttpRequest req,
 								   String username, String password) throws Exception {
 		HttpParams params = new BasicHttpParams();
@@ -51,18 +53,22 @@ public class HttpConnection {
 
 	public static HttpResponse get(URI uri, String username, String password) throws Exception {
 		HttpGet g = new HttpGet(uri);
+		Log.v(TAG, "Get: " + uri);
 		return go(uri.getHost(), g, username, password);
 	}
 
 	public static HttpResponse delete(URI uri, String username, String password) throws Exception {
 		HttpDelete d = new HttpDelete(uri);
+		Log.v(TAG, "Delete: " + uri);
 		return go(uri.getHost(), d, username, password);
 	}
 
 	public static HttpResponse put(URI uri, String username, String password, String content) throws Exception {
 		HttpPut p = new HttpPut(uri);
+		Log.v(TAG, "Put: " + uri);
 		if(content != null) {
 			StringEntity ent = new StringEntity(content);
+			Log.v(TAG, "Content: " + content);
 			ent.setContentType("text/xml");
 			p.setEntity(ent);
 		}
@@ -71,8 +77,10 @@ public class HttpConnection {
 
 	public static HttpResponse post(URI uri, String username, String password, String content) throws Exception {
 		HttpPost p = new HttpPost(uri);
+		Log.v(TAG, "Post: " + uri);
 		if(content != null) {
 			StringEntity ent = new StringEntity(content);
+			Log.v(TAG, "Content: " + content);
 			ent.setContentType("text/xml");
 			p.setEntity(ent);
 		}
