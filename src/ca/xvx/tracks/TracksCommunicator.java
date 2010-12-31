@@ -186,7 +186,8 @@ public class TracksCommunicator extends HandlerThread {
 				act.notify.sendEmptyMessage(SUCCESS_CODE);
 			} else if(resp == 201) {
 				String got = r.getFirstHeader("Location").getValue();
-				got = got.substring(got.lastIndexOf('/') + 1, got.lastIndexOf('.'));
+				Log.i("TC", got);
+				got = got.substring(got.lastIndexOf('/') + 1);
 				int tno = Integer.parseInt(got);
 				t.setId(tno);
 				act.notify.sendEmptyMessage(SUCCESS_CODE);
