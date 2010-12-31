@@ -11,8 +11,12 @@ public class TodoContext {
 	private boolean _hide;
 	
 	// Singleton list of contexts
-	private static final Map<Integer, TodoContext> CONTEXTS = new HashMap<Integer, TodoContext>();
+	private static final Map<Integer, TodoContext> CONTEXTS;
 	
+	static {
+		CONTEXTS = new HashMap<Integer, TodoContext>();
+	}
+
 	public TodoContext(int id, String name, int position, boolean hide) throws DuplicateContextException {
 		if(CONTEXTS.containsKey(id)) {
 			throw new DuplicateContextException();
@@ -57,7 +61,12 @@ public class TodoContext {
 	public void setHidden(boolean hide) {
 		_hide = hide;
 	}
-	
+
+	@Override
+	public String toString() {
+		return _name;
+	}
+
 	// Singleton behavior
 	public static TodoContext getContext(int id) {
 		return CONTEXTS.get(id);

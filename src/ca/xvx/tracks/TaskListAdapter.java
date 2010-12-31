@@ -66,7 +66,7 @@ public class TaskListAdapter extends BaseExpandableListAdapter {
 			return null;
 		}
 
-		return new TaskListItem(parent.getContext(), t);
+		return new TaskListItem(parent.getContext(), t, getNotifyHandler());
 	}
 
 	@Override

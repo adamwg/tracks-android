@@ -1,7 +1,6 @@
 package ca.xvx.tracks;
 
 import android.util.Log;
-import android.os.Handler;
 import android.os.Message;
 
 import java.util.Collection;
@@ -19,34 +18,30 @@ public class Task {
 	private Date _showFrom;
 	private boolean _done;
 
-	private Handler _changeHandler;
-	private Handler _notifyHandler;
-
-	private TracksAction _doneAction;
-	
 	private static final Map<Integer, Task> TASKS = new HashMap<Integer, Task>();
 	
-	public Task(int id, String desc, String notes, TodoContext context, Project project, Date due, Date showFrom) throws DuplicateTaskException {
-		if(TASKS.containsKey(id)) {
-			throw new DuplicateTaskException();
-		}
-		
-		_id = id;
+	public Task(String desc, String notes, TodoContext context, Project project, Date due, Date showFrom) {
+		_id = -1;
 		_description = desc;
 		_notes = notes;
 		_context = context;
 		_project = project;
 		_due = due;
 		_showFrom = showFrom;
+	}
 
+	public Task(int id, String desc, String notes, TodoContext context, Project project, Date due, Date showFrom) throws DuplicateTaskException {
+		this(desc, notes, context, project, due, showFrom);
+
+		if(TASKS.containsKey(id)) {
+			throw new DuplicateTaskException();
+		}
+		
+		_id = id;
+		
 		TASKS.put(id, this);
 	}
 
-	public void setChangeHandler(Handler c, Handler n) {
-		_changeHandler = c;
-		_notifyHandler = n;
-	}
-	
 	public int getId() {
 		return _id;
 	}
@@ -79,44 +74,55 @@ public class Task {
 		return _done;
 	}
 
-	public void setId(int id) {
+	public int setId(int id) {
+		int tmp = _id;
 		_id = id;
-	}
-
-	public void setDescription(String description) {
-		_description = description;
-	}
-
-	public void setNotes(String notes) {
-		_notes = notes;
-	}
-
-	public void setContext(TodoContext context) {
-		_context = context;
-	}
-
-	public void setProject(Project project) {
-		_project = project;
-	}
-
-	public void setDue(Date due) {
-		_due = due;
-	}
-
-	public void setShowFrom(Date showFrom) {
-		_showFrom = showFrom;
-	}
-
-	public void setDone(boolean done) {
-		_done = done;
-
-		if(done) {
-			_doneAction = new TracksAction(TracksAction.ActionType.COMPLETE_TASK, this, _notifyHandler);
-			Message m = _changeHandler.obtainMessage(0, _doneAction);
-			_changeHandler.sendMessageDelayed(m, 500);
-		} else {
-			_changeHandler.removeMessages(0, _doneAction);
+		if(tmp < 0) {
+			TASKS.put(id, this);
 		}
+		return tmp;
+	}
+
+	public String setDescription(String description) {
+		String tmp = _description;
+		_description = description;
+		return tmp;
+	}
+
+	public String setNotes(String notes) {
+		String tmp = _notes;
+		_notes = notes;
+		return tmp;
+	}
+
+	public TodoContext setContext(TodoContext context) {
+		TodoContext tmp = _context;
+		_context = context;
+		return tmp;
+	}
+
+	public Project setProject(Project project) {
+		Project tmp = _project;
+		_project = project;
+		return tmp;
+	}
+
+	public Date setDue(Date due) {
+		Date tmp = _due;
+		_due = due;
+		return tmp;
+	}
+
+	public Date setShowFrom(Date showFrom) {
+		Date tmp = _showFrom;
+		_showFrom = showFrom;
+		return tmp;
+	}
+
+	public boolean setDone(boolean done) {
+		boolean tmp = _done;
+		_done = done;
+		return tmp;
 	}
 
 	public void remove() {

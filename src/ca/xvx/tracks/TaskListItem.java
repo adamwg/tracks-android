@@ -1,6 +1,8 @@
 package ca.xvx.tracks;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.CheckBox;
@@ -12,9 +14,14 @@ public class TaskListItem extends RelativeLayout {
 	private CheckBox _done;
 
 	private Task _task;
+	private TracksAction _doneAction;
+	private Handler _changeHandler;
+	private Handler _notifyHandler;
 
-	public TaskListItem(Context c, Task t) {
+	public TaskListItem(Context c, Task t, Handler n) {
 		super(c);
+		_changeHandler = TracksCommunicator.getHandler();
+		_notifyHandler = n;
 
 		if(t == null) {
 			return;
@@ -36,6 +43,14 @@ public class TaskListItem extends RelativeLayout {
 		_done.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 				public void onCheckedChanged(CompoundButton b, boolean checked) {
 					_task.setDone(checked);
+					if(checked) {
+						_doneAction = new TracksAction(TracksAction.ActionType.COMPLETE_TASK,
+													   _task, _notifyHandler);
+						Message m = _changeHandler.obtainMessage(0, _doneAction);
+						_changeHandler.sendMessageDelayed(m, 500);
+					} else {
+						_changeHandler.removeMessages(0, _doneAction);
+					}
 				}
 			});
 	}

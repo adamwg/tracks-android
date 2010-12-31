@@ -7,12 +7,15 @@
   <string name="SETTINGS_server">Server Address</string>
   <string name="SETTINGS_server_summary">Hostname or IP Address</string>
 
-  <string name="ERR_badprefs">Please Check Your Settings</string>
+  <string name="ERR_badprefs">Please check your settings.</string>
   <string name="ERR_parse">Parse Error</string>
   <string name="ERR_fetch">Fetch Error</string>
+  <string name="ERR_save_general">Failed to save task. Check your connection and try again.</string>
+  <string name="ERR_save_baddata">Description must be provided.</string>
 
   <string name="MSG_fetching">Fetching Data</string>  
   <string name="MSG_parsing">Parsing Data</string>
+  <string name="MSG_saving">Saving Task</string>
   
   <string name="MENU_settings">Settings</string>
   <string name="MENU_refresh">Refresh</string>

@@ -3,16 +3,24 @@ package ca.xvx.tracks;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.format.DateFormat;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 
 public class TaskEditorActivity extends Activity {
@@ -26,6 +34,7 @@ public class TaskEditorActivity extends Activity {
 	private Button _showButt;
 
 	private Task _task;
+	private Handler _commHandler;
 
 	public static final int SAVED = 0;
 	public static final int CANCELED = 1;
@@ -55,6 +64,29 @@ public class TaskEditorActivity extends Activity {
 		saveButt = (Button)findViewById(R.id.TEA_save);
 		cancelButt = (Button)findViewById(R.id.TEA_cancel);
 
+		ArrayAdapter<TodoContext> cad = new ArrayAdapter<TodoContext>(this, android.R.layout.simple_spinner_item,
+																	  TodoContext.getAllContexts().toArray(new TodoContext[0]));
+		cad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		cad.sort(new Comparator<TodoContext>() {
+				@Override
+				public int compare(TodoContext a, TodoContext b) {
+					return a.getPosition() - b.getPosition();
+				}
+			});
+		_context.setAdapter(cad);
+
+		ArrayAdapter<Project> pad = new ArrayAdapter<Project>(this, android.R.layout.simple_spinner_item,
+															  Project.getActiveProjects().toArray(new Project[0]));
+		pad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		pad.sort(new Comparator<Project>() {
+				@Override
+				public int compare(Project a, Project b) {
+					return a.getPosition() - b.getPosition();
+				}
+			});
+		_project.setAdapter(pad);
+
+		_commHandler = TracksCommunicator.getHandler();
 		int tno = intent.getIntExtra("task", -1);
 		if(tno >= 0) {
 			_task = Task.getTask(tno);
@@ -69,13 +101,19 @@ public class TaskEditorActivity extends Activity {
 			if(_showfrom != null) {
 				_showButt.setText(dform.format(_showfrom));
 			}
+
+			TodoContext c = _task.getContext();
+			Project p = _task.getProject();
+			_context.setSelection(cad.getPosition(c));
+			if(p != null) {
+				_project.setSelection(pad.getPosition(p));
+			}
 		}
 
 		saveButt.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					setResult(SAVED);
-					finish();
+					save();
 				}
 			});
 
@@ -100,6 +138,69 @@ public class TaskEditorActivity extends Activity {
 					showDialog(SHOW_FROM);
 				}
 			});
+	}
+
+	private void save() {
+		final String oldDesc, oldNotes;
+		final TodoContext oldContext;
+		final Project oldProject;
+		final Date oldDue, oldShowFrom;
+		final Context context = this;
+
+		Project newProject = (Project)_project.getSelectedItem();
+		if(newProject.getId() < 0) {
+			newProject = null;
+		}
+		TodoContext newContext = (TodoContext)_context.getSelectedItem();
+		
+		// Must have a description
+		if(_description.length() <= 0) {
+			Toast.makeText(context, R.string.ERR_save_baddata, Toast.LENGTH_LONG).show();
+		}
+
+		if(_task == null) {
+			_task = new Task(_description.getText().toString(), _notes.getText().toString(), newContext,
+							 newProject, _due, _showfrom);
+			oldDesc = _task.getDescription();
+			oldNotes = _task.getNotes();
+			oldContext = _task.getContext();
+			oldProject = _task.getProject();
+			oldDue = _task.getDue();
+			oldShowFrom = _task.getShowFrom();
+		} else {
+			oldDesc = _task.setDescription(_description.getText().toString());
+			oldNotes = _task.setNotes(_notes.getText().toString());
+			oldContext = _task.setContext(newContext);
+			oldProject = _task.setProject(newProject);
+			oldDue = _task.setDue(_due);
+			oldShowFrom = _task.setShowFrom(_showfrom);
+		}
+
+		final ProgressDialog p = ProgressDialog.show(context, "", getString(R.string.MSG_saving), true);
+		TracksAction a = new TracksAction(TracksAction.ActionType.UPDATE_TASK, _task, new Handler() {
+				@Override
+				public void handleMessage(Message msg) {
+					switch(msg.what) {
+					case TracksCommunicator.SUCCESS_CODE:
+						p.dismiss();
+						setResult(SAVED);
+						finish();
+						break;
+					case TracksCommunicator.UPDATE_FAIL_CODE:
+						p.dismiss();
+						Toast.makeText(context, R.string.ERR_save_general, Toast.LENGTH_LONG).show();
+						// Reset task data to stay synced with server.
+						_task.setDescription(oldDesc);
+						_task.setNotes(oldNotes);
+						_task.setContext(oldContext);
+						_task.setProject(oldProject);
+						_task.setDue(oldDue);
+						_task.setShowFrom(oldShowFrom);
+						break;
+					}
+				}
+			});
+		_commHandler.obtainMessage(0, a).sendToTarget();
 	}
 
 	@Override

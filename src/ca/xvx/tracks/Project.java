@@ -3,6 +3,7 @@ package ca.xvx.tracks;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 
 public class Project {
 	public enum ProjectState { ACTIVE, HIDDEN, COMPLETED };
@@ -15,7 +16,17 @@ public class Project {
 	private TodoContext _defaultContext;
 	
 	// Singleton list of projects
-	private static final Map<Integer, Project> PROJECTS = new HashMap<Integer, Project>();
+	private static final Map<Integer, Project> PROJECTS;
+	static {
+		PROJECTS = new HashMap<Integer, Project>();
+		PROJECTS.put(-1, new Project());
+	}
+
+	private Project() {
+		_id = -1;
+		_name = "<none>";
+		_state = ProjectState.ACTIVE;
+	}
 	
 	public Project(int id, String name, String description, int position, ProjectState state, TodoContext defaultContext) throws DuplicateProjectException {
 		if(PROJECTS.containsKey(id)) {
@@ -31,7 +42,7 @@ public class Project {
 		PROJECTS.put(id, this);
 	}
 	
-	public int get_id() {
+	public int getId() {
 		return _id;
 	}
 	public String getName() {
@@ -68,11 +79,31 @@ public class Project {
 		_defaultContext = defaultContext;
 	}
 
+	@Override
+	public String toString() {
+		return _name;
+	}
+
 	public static Project getProject(int id) {
 		return PROJECTS.get(id);
 	}
 
 	public static Collection<Project> getAllProjects() {
 		return PROJECTS.values();
+	}
+
+	public static Collection<Project> getActiveProjects() {
+		Collection<Project> ret = PROJECTS.values();
+		Collection<Project> rem = new Vector<Project>();
+
+		for(Project p : ret) {
+			if(p.getState() != ProjectState.ACTIVE) {
+				rem.add(p);
+			}
+		}
+
+		ret.removeAll(rem);
+
+		return ret;
 	}
 }

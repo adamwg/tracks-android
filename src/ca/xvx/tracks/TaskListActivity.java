@@ -23,7 +23,7 @@ public class TaskListActivity extends ExpandableListActivity {
 	private SharedPreferences _prefs;
 	private Handler _commHandler;
 
-	private static final int INIT_SETTINGS = 1;
+	private static final int SETTINGS = 1;
 	private static final int NEW_TASK = 2;
 	private static final int EDIT_TASK = 2;
 	
@@ -36,13 +36,13 @@ public class TaskListActivity extends ExpandableListActivity {
 
 		TracksCommunicator comm = new TracksCommunicator(_prefs);
 		comm.start();
-		_commHandler = comm.getHandler();
+		_commHandler = TracksCommunicator.getHandler();
 		
 		_tla = new TaskListAdapter();
 		setListAdapter(_tla);
 		if(!_prefs.getBoolean(PreferenceConstants.RUN, false)) {
 			_prefs.edit().putBoolean(PreferenceConstants.RUN, true).commit();
-			startActivityForResult(new Intent(this, SettingsActivity.class), INIT_SETTINGS);
+			startActivityForResult(new Intent(this, SettingsActivity.class), SETTINGS);
 		} else {
 			refreshList();
 		}
@@ -84,10 +84,6 @@ public class TaskListActivity extends ExpandableListActivity {
 							}
 						}
 
-						for(Task t : Task.getAllTasks()) {
-							t.setChangeHandler(_commHandler, _tla.getNotifyHandler());
-						}
-						
 						registerForContextMenu(getExpandableListView());
 						break;
 					}
@@ -138,8 +134,13 @@ public class TaskListActivity extends ExpandableListActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if(requestCode == INIT_SETTINGS) {
+		if(requestCode == SETTINGS) {
 			refreshList();
+		}
+		
+		if((requestCode == NEW_TASK || requestCode == EDIT_TASK) &&
+		   resultCode == TaskEditorActivity.SAVED) {
+			_tla.notifyDataSetChanged();
 		}
 	}
 
@@ -168,7 +169,7 @@ public class TaskListActivity extends ExpandableListActivity {
 			startActivityForResult(new Intent(this, TaskEditorActivity.class), NEW_TASK);
 			return true;
 		case R.id.MENU_settings:
-			startActivityForResult(new Intent(this, SettingsActivity.class), INIT_SETTINGS);
+			startActivityForResult(new Intent(this, SettingsActivity.class), SETTINGS);
 			return true;
 		case R.id.MENU_refresh:
 			refreshList();
