@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TodoContext {
+public class TodoContext implements Comparable<TodoContext> {
 	private int _id;
 	private String _name;
 	private int _position;
@@ -65,6 +65,11 @@ public class TodoContext {
 	@Override
 	public String toString() {
 		return _name;
+	}
+
+	@Override
+	public int compareTo(TodoContext c) {
+		return _position - c._position;
 	}
 
 	// Singleton behavior

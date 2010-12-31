@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Task {
+public class Task implements Comparable<Task> {
 	private int _id;
 	private String _description;
 	private String _notes;
@@ -135,6 +135,23 @@ public class Task {
 	
 	public static int getTaskCount() {
 		return TASKS.size();
+	}
+
+	@Override
+	public int compareTo(Task t) {
+		if(_due != null) {
+			if(t._due != null) {
+				return _due.compareTo(t._due);
+			} else {
+				return -1;
+			}
+		} else {
+			if(t._due != null) {
+				return 1;
+			} else {
+				return t._id - _id;
+			}
+		}
 	}
 
 	public static Collection<Task> getAllTasks() {

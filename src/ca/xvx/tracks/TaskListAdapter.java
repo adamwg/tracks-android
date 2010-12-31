@@ -1,5 +1,6 @@
 package ca.xvx.tracks;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -49,6 +50,11 @@ public class TaskListAdapter extends BaseExpandableListAdapter {
 				_tasks.put(t.getContext(), new Vector<Task>());
 			}
 			_tasks.get(t.getContext()).add(t);
+		}
+
+		Collections.sort(_contexts);
+		for(TodoContext c : _contexts) {
+			Collections.sort(_tasks.get(c));
 		}
 
 		super.notifyDataSetChanged();

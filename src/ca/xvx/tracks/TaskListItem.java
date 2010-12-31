@@ -3,10 +3,13 @@ package ca.xvx.tracks;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.text.format.DateFormat;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+
+import java.util.Calendar;
 
 public class TaskListItem extends RelativeLayout {
 	private TextView _name;
@@ -18,8 +21,16 @@ public class TaskListItem extends RelativeLayout {
 	private Handler _changeHandler;
 	private Handler _notifyHandler;
 
+	// Within one day is amber.
+	private static final long AMBER_TIME = 24*3600*1000;
+	// Within one week is orange.
+	private static final long ORANGE_TIME = 7*24*3600*1000;
+
 	public TaskListItem(Context c, Task t, Handler n) {
 		super(c);
+		Calendar now = Calendar.getInstance();
+		Calendar cmp = Calendar.getInstance();
+		
 		_changeHandler = TracksCommunicator.getHandler();
 		_notifyHandler = n;
 
@@ -33,10 +44,27 @@ public class TaskListItem extends RelativeLayout {
 		_info = (TextView)findViewById(R.id.TLI_info);
 		_done = (CheckBox)findViewById(R.id.TLI_done);
 
-		_name.setText(_task.getDescription());
+		String name = _task.getDescription();
+		if(_task.getProject() != null) {
+			name += "  [" + t.getProject().getName() + "]";
+		}
+		_name.setText(name);
+		
 		String infos = "";
-		if(t.getProject() != null) {
-			infos += "Project: " + t.getProject().getName();
+		if(t.getDue() != null) {
+			infos += "Due: " + DateFormat.getDateFormat(c).format(t.getDue());
+
+			// Set the text color according to due date
+			cmp.setTime(t.getDue());
+			if(cmp.before(now)) {
+				_info.setTextColor(getResources().getColor(R.color.red));
+			} else if(cmp.getTimeInMillis() - now.getTimeInMillis() < AMBER_TIME) {
+				_info.setTextColor(getResources().getColor(R.color.amber));
+			} else if(cmp.getTimeInMillis() - now.getTimeInMillis() < ORANGE_TIME) {
+				_info.setTextColor(getResources().getColor(R.color.orange));
+			} else {
+				_info.setTextColor(getResources().getColor(R.color.green));
+			}
 		}
 		_info.setText(infos);
 
