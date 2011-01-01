@@ -1,11 +1,11 @@
 Tracks for Android
 ==================
 
-An Android application for the popular [Tracks][http://www.getontracks.org] todo
+An Android application for the popular [Tracks](http://www.getontracks.org) todo
 list.  Pertinent links:
 
-* [Project Homepage][http://xvx.ca/code/tracks-android]
-* [Source Code][http://github.com/adamwg/tracks-android]
+* [Project Homepage](http://xvx.ca/code/tracks-android)
+* [Source Code](http://github.com/adamwg/tracks-android)
 
 Compiling
 ---------
