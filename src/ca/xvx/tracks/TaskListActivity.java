@@ -123,6 +123,7 @@ public class TaskListActivity extends ExpandableListActivity {
 		Task t = (Task)_tla.getChild(gid, cid);
 		String desc = t.getDescription();
 		Context context = getExpandableListView().getContext();
+		TracksAction a;
 		
 		switch(item.getItemId()) {
 		case R.id.edit_task:
@@ -131,12 +132,15 @@ public class TaskListActivity extends ExpandableListActivity {
 			startActivityForResult(i, EDIT_TASK);
 			return true;
 		case R.id.delete_task:
-			TracksAction a = new TracksAction(TracksAction.ActionType.DELETE_TASK, t,
-											  _tla.getNotifyHandler());
+			a = new TracksAction(TracksAction.ActionType.DELETE_TASK, t,
+								 _tla.getNotifyHandler());
 			Message.obtain(_commHandler, 0, a).sendToTarget();			
 			return true;
 		case R.id.done_task:
 			t.setDone(true);
+			a = new TracksAction(TracksAction.ActionType.COMPLETE_TASK,
+								 t, _tla.getNotifyHandler());
+			_commHandler.obtainMessage(0, a).sendToTarget();
 			return true;
 		default:
 			return super.onContextItemSelected(item);
