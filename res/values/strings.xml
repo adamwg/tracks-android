@@ -16,6 +16,7 @@
   <string name="MSG_fetching">Fetching Data</string>  
   <string name="MSG_parsing">Parsing Data</string>
   <string name="MSG_saving">Saving Task</string>
+  <string name="MSG_welcome">Welcome to Tracks for Android!  Please fill in your server and account settings, then press the back button to see your task list.  You can get back to this settings screen later from the menu.</string>
   
   <string name="MENU_settings">Settings</string>
   <string name="MENU_refresh">Refresh</string>
