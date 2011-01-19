@@ -19,6 +19,7 @@ public class ProjectXmlHandler extends DefaultHandler {
 
 	public ProjectXmlHandler() {
 		super();
+		Project.clear();
 		_text = new StringBuffer();
 	}
 	

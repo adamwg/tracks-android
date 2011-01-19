@@ -80,4 +80,8 @@ public class TodoContext implements Comparable<TodoContext> {
 	public static Collection<TodoContext> getAllContexts() {
 		return CONTEXTS.values();
 	}
+
+	protected static void clear() {
+		CONTEXTS.clear();
+	}
 }

@@ -106,4 +106,8 @@ public class Project {
 
 		return ret;
 	}
+
+	protected static void clear() {
+		PROJECTS.clear();
+	}
 }

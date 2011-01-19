@@ -10,13 +10,13 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.Vector;
 
 public class TaskListAdapter extends BaseExpandableListAdapter {
 	private Vector<TodoContext> _contexts;
-	private Map<TodoContext, Vector<Task>> _tasks;
+	private SortedMap<TodoContext, Vector<Task>> _tasks;
 
 	private Handler _notifyHandler;
 
@@ -24,7 +24,7 @@ public class TaskListAdapter extends BaseExpandableListAdapter {
 		super();
 
 		_contexts = new Vector<TodoContext>();
-		_tasks = new HashMap<TodoContext, Vector<Task>>();
+		_tasks = new TreeMap<TodoContext, Vector<Task>>();
 	}
 
 	public Handler getNotifyHandler() {

@@ -17,6 +17,7 @@ public class ContextXmlHandler extends DefaultHandler {
 
 	public ContextXmlHandler() {
 		super();
+		TodoContext.clear();
 		_text = new StringBuffer();
 	}
 	

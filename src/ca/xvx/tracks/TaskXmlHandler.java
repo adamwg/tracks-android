@@ -26,6 +26,7 @@ public class TaskXmlHandler extends DefaultHandler {
 
 	public TaskXmlHandler() {
 		super();
+		Task.clear();
 		_text = new StringBuffer();
 	}
 	

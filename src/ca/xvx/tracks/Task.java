@@ -154,4 +154,8 @@ public class Task implements Comparable<Task> {
 	public static Collection<Task> getAllTasks() {
 		return TASKS.values();
 	}
+
+	protected static void clear() {
+		TASKS.clear();
+	}
 }

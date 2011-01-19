@@ -48,8 +48,6 @@ public class TaskListActivity extends ExpandableListActivity {
 		
 		if(!_prefs.getBoolean(PreferenceConstants.RUN, false)) {
 			Log.i(TAG, "This appears to be our first run; edit preferences");
-			
-			_prefs.edit().putBoolean(PreferenceConstants.RUN, true).commit();
 			startActivityForResult(new Intent(this, SettingsActivity.class), SETTINGS);
 		} else {
 			Log.v(TAG, "Fetching tasks");
