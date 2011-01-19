@@ -1,19 +1,19 @@
 <svg width="512" height="512" xmlns="http://www.w3.org/2000/svg">
  <metadata>image/svg+xml</metadata>
  <defs>
-  <linearGradient id="svg_6" x1="0.25" y1="0" x2="0.75" y2="1">
-   <stop offset="0" stop-color="#ffffff"/>
-   <stop offset="1" stop-color="#000000"/>
+  <linearGradient y2="1" x2="0.75" y1="0" x1="0.25" id="svg_6">
+   <stop stop-color="#ffffff" offset="0"/>
+   <stop stop-color="#000000" offset="1"/>
   </linearGradient>
-  <linearGradient id="svg_7" x1="0.5" y1="0" x2="0.5" y2="1">
-   <stop offset="0" stop-color="#ffffff"/>
-   <stop offset="1" stop-color="#000000"/>
+  <linearGradient y2="1" x2="0.5" y1="0" x1="0.5" id="svg_7">
+   <stop stop-color="#ffffff" offset="0"/>
+   <stop stop-color="#000000" offset="1"/>
   </linearGradient>
  </defs>
  <g>
-  <rect ry="10" rx="10" id="svg_1" height="398" width="398" y="57" x="57" stroke-dasharray="null" stroke-width="1px" fill="#99cc33"/>
-  <path fill="#ffffff" fill-rule="evenodd" stroke-width="1px" d="m452.744781,135.704834c-47.627136,-40.067001 -70.161072,-75.109203 -70.161072,-75.109203c-87.954163,63.588436 -181.360718,289.37495 -181.360718,289.37495c-43.774445,-75.610687 -87.78804,-96.700012 -87.78804,-96.700012c-19.786964,32.441681 -53.894043,75.677063 -53.894043,75.677063c79.55069,26.287476 146.322525,122.752533 146.322525,122.752533c144.344482,-278.054718 246.881348,-315.995331 246.881348,-315.995331z"/>
+  <rect fill="#99cc33" stroke-width="1px" stroke-dasharray="null" x="57" y="57" width="398" height="398" id="svg_1" rx="20" ry="20"/>
+  <path d="m452.74478,135.70483c-47.62714,-40.067 -70.16107,-75.1092 -70.16107,-75.1092c-87.95416,63.58844 -181.36072,289.37495 -181.36072,289.37495c-43.77444,-75.61069 -87.78804,-96.70003 -87.78804,-96.70003c-19.78696,32.4417 -53.89404,75.67708 -53.89404,75.67708c79.55069,26.28748 146.32253,122.75253 146.32253,122.75253c144.34448,-278.05472 246.88135,-315.99533 246.88135,-315.99533z" stroke-width="1px" fill-rule="evenodd" fill="#ffffff"/>
   <title>Layer 1</title>
-  <rect ry="10" rx="10" height="398" width="398" y="57" x="57" stroke-dasharray="null" stroke-width="1px" fill="url(#svg_7)" id="svg_4" opacity="0.2"/>
+  <rect opacity="0.2" id="svg_4" fill="url(#svg_7)" stroke-width="1px" stroke-dasharray="null" x="57" y="57" width="398" height="398" rx="20" ry="20"/>
  </g>
 </svg>
