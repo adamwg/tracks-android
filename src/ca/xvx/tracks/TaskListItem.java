@@ -30,6 +30,7 @@ public class TaskListItem extends RelativeLayout {
 		super(c);
 		Calendar now = Calendar.getInstance();
 		Calendar cmp = Calendar.getInstance();
+		long nowm, cmpm;
 		
 		_changeHandler = TracksCommunicator.getHandler();
 		_notifyHandler = n;
@@ -56,11 +57,23 @@ public class TaskListItem extends RelativeLayout {
 
 			// Set the text color according to due date
 			cmp.setTime(t.getDue());
-			if(cmp.before(now)) {
+			cmp.set(Calendar.HOUR_OF_DAY, 0);
+			cmp.set(Calendar.MINUTE, 0);
+			cmp.set(Calendar.SECOND, 0);
+			cmp.set(Calendar.MILLISECOND, 0);
+
+			now.set(Calendar.HOUR_OF_DAY, 0);
+			now.set(Calendar.MINUTE, 0);
+			now.set(Calendar.SECOND, 0);
+			now.set(Calendar.MILLISECOND, 0);
+
+			nowm = now.getTimeInMillis();
+			cmpm = cmp.getTimeInMillis();
+			if(cmpm - nowm < 0) {
 				_info.setTextColor(getResources().getColor(R.color.red));
-			} else if(cmp.getTimeInMillis() - now.getTimeInMillis() < AMBER_TIME) {
+			} else if(cmpm - nowm <= AMBER_TIME) {
 				_info.setTextColor(getResources().getColor(R.color.amber));
-			} else if(cmp.getTimeInMillis() - now.getTimeInMillis() < ORANGE_TIME) {
+			} else if(cmpm - nowm <= ORANGE_TIME) {
 				_info.setTextColor(getResources().getColor(R.color.orange));
 			} else {
 				_info.setTextColor(getResources().getColor(R.color.green));

@@ -60,7 +60,7 @@ public class ProjectXmlHandler extends DefaultHandler {
 			}
 		} else if(qName.equals("position")) {
 			_position = Integer.valueOf(_text.toString());
-		} else if(qName.equals("default-context-id")) {
+		} else if(qName.equals("default-context-id") && _text.length() > 0) {
 			try {
 				_defaultContext = TodoContext.getContext(Integer.valueOf(_text.toString()));
 			} catch(NumberFormatException e) {

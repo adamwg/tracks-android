@@ -64,13 +64,13 @@ public class TaskXmlHandler extends DefaultHandler {
 			if(_text.length() > 0) {
 				_project = Project.getProject(Integer.parseInt(_text.toString()));
 			}
-		} else if(qName.equals("due")) {
+		} else if(qName.equals("due") && _text.length() > 0) {
 			try {
 				_due = DATEFORM.parse(_text.toString());
 			} catch(ParseException e) {
 				Log.w(TAG, "Unexpected date format: " + _text.toString(), e);
 			}
-		} else if(qName.equals("show-from")) {
+		} else if(qName.equals("show-from") && _text.length() > 0) {
 			try {
 				_showFrom = DATEFORM.parse(_text.toString());
 			} catch(ParseException e) {
