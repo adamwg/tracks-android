@@ -19,7 +19,6 @@ public class Project {
 	private static final Map<Integer, Project> PROJECTS;
 	static {
 		PROJECTS = new HashMap<Integer, Project>();
-		PROJECTS.put(-1, new Project());
 	}
 
 	private Project() {
@@ -109,5 +108,6 @@ public class Project {
 
 	protected static void clear() {
 		PROJECTS.clear();
+		PROJECTS.put(-1, new Project());
 	}
 }
