@@ -1,5 +1,6 @@
 package ca.xvx.tracks;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -75,7 +76,28 @@ public class Task implements Comparable<Task> {
 		int tmp = _id;
 		_id = id;
 		if(tmp < 0) {
-			TASKS.put(id, this);
+			if(_showFrom == null) {
+				TASKS.put(id, this);
+			} else {
+				Calendar now = Calendar.getInstance();
+				Calendar cmp = Calendar.getInstance();
+				long nowm, cmpm;
+				cmp.setTime(_showFrom);
+				cmp.set(Calendar.HOUR_OF_DAY, 0);
+				cmp.set(Calendar.MINUTE, 0);
+				cmp.set(Calendar.SECOND, 0);
+				cmp.set(Calendar.MILLISECOND, 0);
+				now.set(Calendar.HOUR_OF_DAY, 0);
+				now.set(Calendar.MINUTE, 0);
+				now.set(Calendar.SECOND, 0);
+				now.set(Calendar.MILLISECOND, 0);
+				nowm = now.getTimeInMillis();
+				cmpm = cmp.getTimeInMillis();
+				
+				if(cmpm <= nowm) {
+					TASKS.put(id, this);
+				}
+			}
 		}
 		return tmp;
 	}
@@ -113,6 +135,28 @@ public class Task implements Comparable<Task> {
 	public Date setShowFrom(Date showFrom) {
 		Date tmp = _showFrom;
 		_showFrom = showFrom;
+		
+		Calendar now = Calendar.getInstance();
+		Calendar cmp = Calendar.getInstance();
+		long nowm, cmpm;
+		cmp.setTime(_showFrom);
+		cmp.set(Calendar.HOUR_OF_DAY, 0);
+		cmp.set(Calendar.MINUTE, 0);
+		cmp.set(Calendar.SECOND, 0);
+		cmp.set(Calendar.MILLISECOND, 0);
+		now.set(Calendar.HOUR_OF_DAY, 0);
+		now.set(Calendar.MINUTE, 0);
+		now.set(Calendar.SECOND, 0);
+		now.set(Calendar.MILLISECOND, 0);
+		nowm = now.getTimeInMillis();
+		cmpm = cmp.getTimeInMillis();
+		
+		if(cmpm > nowm) {
+			if(TASKS.containsKey(_id)) {
+				TASKS.remove(_id);
+			}
+		}
+		
 		return tmp;
 	}
 
