@@ -7,6 +7,17 @@
 						android:title="@string/SETTINGS_server"
 						android:summary="@string/SETTINGS_server_summary"
 						android:key="server" />
+	<EditTextPreference android:defaultValue="80"
+						android:singleLine="true"
+						android:title="@string/SETTINGS_port"
+						android:summary="@string/SETTINGS_port_summary"
+						android:inputType="number"
+						android:key="port" />
+	<CheckBoxPreference android:defaultValue="false"
+						android:title="@string/SETTINGS_https"
+						android:summaryOn="@string/SETTINGS_https_summary_on"
+						android:summaryOff="@string/SETTINGS_https_summary_off"
+						android:key="https" />
 	<EditTextPreference android:defaultValue=""
 						android:singleLine="true"
 						android:inputType="textNoSuggestions"

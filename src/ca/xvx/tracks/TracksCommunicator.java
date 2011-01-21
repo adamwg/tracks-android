@@ -61,8 +61,11 @@ public class TracksCommunicator extends HandlerThread {
 
 	private void fetchTasks(TracksAction act) {
 		final String server = _prefs.getString(PreferenceConstants.SERVER, null);
+		final boolean https = _prefs.getBoolean(PreferenceConstants.HTTPS, false);
+		final int port = Integer.parseInt(_prefs.getString(PreferenceConstants.PORT, "80"));
 		final String username = _prefs.getString(PreferenceConstants.USERNAME, null);
 		final String password = _prefs.getString(PreferenceConstants.PASSWORD, null);
+		final String protocol = https ? "https" : "http";
 
 		Log.d(TAG, "Fetching tasks");
 
@@ -79,15 +82,15 @@ public class TracksCommunicator extends HandlerThread {
 		Message.obtain(replyTo, FETCH_CODE).sendToTarget();
 
 		try {
-			r = HttpConnection.get(new URI("http", null, server, 80, "/contexts.xml", null, null),
+			r = HttpConnection.get(new URI(protocol, null, server, port, "/contexts.xml", null, null),
 								   username, password);
 			ret[0] = r.getEntity().getContent();
 			
-			r = HttpConnection.get(new URI("http", null, server, 80, "/projects.xml", null, null),
+			r = HttpConnection.get(new URI(protocol, null, server, port, "/projects.xml", null, null),
 								   username, password);
 			ret[1] = r.getEntity().getContent();
 			
-			r = HttpConnection.get(new URI("http", null, server, 80, "/todos.xml", null, null),
+			r = HttpConnection.get(new URI(protocol, null, server, port, "/todos.xml", null, null),
 								   username, password);
 			ret[2] = r.getEntity().getContent();
 		} catch(Exception e) {

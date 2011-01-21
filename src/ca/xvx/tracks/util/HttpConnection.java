@@ -33,7 +33,7 @@ import org.apache.http.protocol.HttpContext;
 public class HttpConnection {
 	private static final String TAG = "HttpConnection";
 	
-	private static HttpResponse go(String host, HttpRequest req,
+	private static HttpResponse go(String scheme, String host, int port, HttpRequest req,
 								   String username, String password) throws Exception {
 		HttpParams params = new BasicHttpParams();
 		HttpProtocolParams.setUseExpectContinue(params, false);
@@ -48,19 +48,19 @@ public class HttpConnection {
 		localcontext.setAttribute("preemptive-auth", basicAuth);
 		h.addRequestInterceptor(new PreemptiveAuth(), 0);
 		
-		return h.execute(new HttpHost(host), req);
+		return h.execute(new HttpHost(host, port, scheme), req);
 	}
 
 	public static HttpResponse get(URI uri, String username, String password) throws Exception {
 		HttpGet g = new HttpGet(uri);
 		Log.v(TAG, "Get: " + uri);
-		return go(uri.getHost(), g, username, password);
+		return go(uri.getScheme(), uri.getHost(), uri.getPort(), g, username, password);
 	}
 
 	public static HttpResponse delete(URI uri, String username, String password) throws Exception {
 		HttpDelete d = new HttpDelete(uri);
 		Log.v(TAG, "Delete: " + uri);
-		return go(uri.getHost(), d, username, password);
+		return go(uri.getScheme(), uri.getHost(), uri.getPort(), d, username, password);
 	}
 
 	public static HttpResponse put(URI uri, String username, String password, String content) throws Exception {
@@ -72,7 +72,7 @@ public class HttpConnection {
 			ent.setContentType("text/xml");
 			p.setEntity(ent);
 		}
-		return go(uri.getHost(), p, username, password);
+		return go(uri.getScheme(), uri.getHost(), uri.getPort(), p, username, password);
 	}
 
 	public static HttpResponse post(URI uri, String username, String password, String content) throws Exception {
@@ -84,7 +84,7 @@ public class HttpConnection {
 			ent.setContentType("text/xml");
 			p.setEntity(ent);
 		}
-		return go(uri.getHost(), p, username, password);
+		return go(uri.getScheme(), uri.getHost(), uri.getPort(), p, username, password);
 	}
 
 	private static UsernamePasswordCredentials getAuth(String username, String password) {

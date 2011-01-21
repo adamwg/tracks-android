@@ -6,6 +6,11 @@
   <string name="SETTINGS_username">Username</string>
   <string name="SETTINGS_server">Server Address</string>
   <string name="SETTINGS_server_summary">Hostname or IP Address</string>
+  <string name="SETTINGS_port">Server Port</string>
+  <string name="SETTINGS_port_summary">The port used for Tracks on the server</string>
+  <string name="SETTINGS_https">Use HTTPS?</string>
+  <string name="SETTINGS_https_summary_off">Will use insecure HTTP connections</string>
+  <string name="SETTINGS_https_summary_on">Will use secure HTTPS connections</string>
 
   <string name="ERR_badprefs">Please check your settings.</string>
   <string name="ERR_parse">Parse Error</string>
