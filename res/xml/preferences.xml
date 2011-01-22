@@ -17,7 +17,14 @@
 						android:title="@string/SETTINGS_https"
 						android:summaryOn="@string/SETTINGS_https_summary_on"
 						android:summaryOff="@string/SETTINGS_https_summary_off"
+						android:disableDependentsState="false"
 						android:key="https" />
+	<CheckBoxPreference android:defaultValue="false"
+						android:title="@string/SETTINGS_badcert"
+						android:summaryOn="@string/SETTINGS_badcert_summary_on"
+						android:summaryOff="@string/SETTINGS_badcert_summary_off"
+						android:dependency="https"
+						android:key="badcert" />
 	<EditTextPreference android:defaultValue=""
 						android:singleLine="true"
 						android:inputType="textNoSuggestions"

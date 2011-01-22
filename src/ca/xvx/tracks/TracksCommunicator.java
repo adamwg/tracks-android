@@ -62,7 +62,13 @@ public class TracksCommunicator extends HandlerThread {
 	private void fetchTasks(TracksAction act) {
 		final String server = _prefs.getString(PreferenceConstants.SERVER, null);
 		final boolean https = _prefs.getBoolean(PreferenceConstants.HTTPS, false);
-		final int port = Integer.parseInt(_prefs.getString(PreferenceConstants.PORT, "80"));
+		final boolean badcert = _prefs.getBoolean(PreferenceConstants.BADCERT, false);
+		final int port;
+		if(https) {
+			port = Integer.parseInt(_prefs.getString(PreferenceConstants.PORT, "443"));
+		} else {
+			port = Integer.parseInt(_prefs.getString(PreferenceConstants.PORT, "80"));
+		}
 		final String username = _prefs.getString(PreferenceConstants.USERNAME, null);
 		final String password = _prefs.getString(PreferenceConstants.PASSWORD, null);
 		final String protocol = https ? "https" : "http";
@@ -83,15 +89,15 @@ public class TracksCommunicator extends HandlerThread {
 
 		try {
 			r = HttpConnection.get(new URI(protocol, null, server, port, "/contexts.xml", null, null),
-								   username, password);
+								   username, password, badcert);
 			ret[0] = r.getEntity().getContent();
 			
 			r = HttpConnection.get(new URI(protocol, null, server, port, "/projects.xml", null, null),
-								   username, password);
+								   username, password, badcert);
 			ret[1] = r.getEntity().getContent();
 			
 			r = HttpConnection.get(new URI(protocol, null, server, port, "/todos.xml", null, null),
-								   username, password);
+								   username, password, badcert);
 			ret[2] = r.getEntity().getContent();
 		} catch(Exception e) {
 			Log.w(TAG, "Failed to fetch tasks!", e);
@@ -120,8 +126,17 @@ public class TracksCommunicator extends HandlerThread {
 
 	private void completeTask(TracksAction act) {
 		final String server = _prefs.getString(PreferenceConstants.SERVER, null);
+		final boolean https = _prefs.getBoolean(PreferenceConstants.HTTPS, false);
+		final boolean badcert = _prefs.getBoolean(PreferenceConstants.BADCERT, false);
+		final int port;
+		if(https) {
+			port = Integer.parseInt(_prefs.getString(PreferenceConstants.PORT, "443"));
+		} else {
+			port = Integer.parseInt(_prefs.getString(PreferenceConstants.PORT, "80"));
+		}
 		final String username = _prefs.getString(PreferenceConstants.USERNAME, null);
 		final String password = _prefs.getString(PreferenceConstants.PASSWORD, null);
+		final String protocol = https ? "https" : "http";
 
 		Task t = (Task)act.target;
 		HttpResponse r;
@@ -129,11 +144,11 @@ public class TracksCommunicator extends HandlerThread {
 		Log.d(TAG, "Marking task " + String.valueOf(t.getId()) + " as done");
 
 		try {
-			r = HttpConnection.put(new URI("http", server, "/todos/" +
+			r = HttpConnection.put(new URI(protocol, server, "/todos/" +
 										   String.valueOf(t.getId()) + "/toggle_check.xml", null),
 								   username,
 								   password,
-								   null);
+								   null, badcert);
 		} catch(Exception e) {
 			return;
 		}
@@ -144,8 +159,17 @@ public class TracksCommunicator extends HandlerThread {
 
 	private void deleteTask(TracksAction act) {
 		final String server = _prefs.getString(PreferenceConstants.SERVER, null);
+		final boolean https = _prefs.getBoolean(PreferenceConstants.HTTPS, false);
+		final boolean badcert = _prefs.getBoolean(PreferenceConstants.BADCERT, false);
+		final int port;
+		if(https) {
+			port = Integer.parseInt(_prefs.getString(PreferenceConstants.PORT, "443"));
+		} else {
+			port = Integer.parseInt(_prefs.getString(PreferenceConstants.PORT, "80"));
+		}
 		final String username = _prefs.getString(PreferenceConstants.USERNAME, null);
 		final String password = _prefs.getString(PreferenceConstants.PASSWORD, null);
+		final String protocol = https ? "https" : "http";
 
 		Task t = (Task)act.target;
 		HttpResponse r;
@@ -153,10 +177,10 @@ public class TracksCommunicator extends HandlerThread {
 		Log.d(TAG, "Deleting task " + String.valueOf(t.getId()));
 
 		try {
-			r = HttpConnection.delete(new URI("http", server, "/todos/" +
+			r = HttpConnection.delete(new URI(protocol, server, "/todos/" +
 											  String.valueOf(t.getId()) + ".xml", null),
 									  username,
-									  password);
+									  password, badcert);
 		} catch(Exception e) {
 			return;
 		}
@@ -167,8 +191,17 @@ public class TracksCommunicator extends HandlerThread {
 
 	private void updateTask(TracksAction act) {
 		final String server = _prefs.getString(PreferenceConstants.SERVER, null);
+		final boolean https = _prefs.getBoolean(PreferenceConstants.HTTPS, false);
+		final boolean badcert = _prefs.getBoolean(PreferenceConstants.BADCERT, false);
+		final int port;
+		if(https) {
+			port = Integer.parseInt(_prefs.getString(PreferenceConstants.PORT, "443"));
+		} else {
+			port = Integer.parseInt(_prefs.getString(PreferenceConstants.PORT, "80"));
+		}
 		final String username = _prefs.getString(PreferenceConstants.USERNAME, null);
 		final String password = _prefs.getString(PreferenceConstants.PASSWORD, null);
+		final String protocol = https ? "https" : "http";
 
 		Task t = (Task)act.target;
 
@@ -215,13 +248,13 @@ public class TracksCommunicator extends HandlerThread {
 
 			if(t.getId() < 0) {
 				Log.v(TAG, "Posting to todos.xml to create new task");
-				r = HttpConnection.post(new URI("http", server, "/todos.xml", null), username, password,
-										xml.toString());
+				r = HttpConnection.post(new URI(protocol, server, "/todos.xml", null), username, password,
+										xml.toString(), badcert);
 			} else {
 				Log.v(TAG, "Putting to update existing task");
-				r = HttpConnection.put(new URI("http", server,
+				r = HttpConnection.put(new URI(protocol, server,
 											   "/todos/" + String.valueOf(t.getId()) + ".xml", null),
-									   username, password, xml.toString());
+									   username, password, xml.toString(), badcert);
 			}
 
 			resp = r.getStatusLine().getStatusCode();
