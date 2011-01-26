@@ -1,4 +1,4 @@
-package ca.xvx.tracks;
+package ca.xvx.tracks.preferences;
 
 public interface PreferenceConstants {
 	public static final String RUN = "run";

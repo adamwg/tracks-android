@@ -1,5 +1,7 @@
 package ca.xvx.tracks;
 
+import ca.xvx.tracks.preferences.PreferenceConstants;
+
 import android.util.Log;
 
 import android.app.AlertDialog;
