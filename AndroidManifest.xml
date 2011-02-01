@@ -5,7 +5,8 @@
 		  android:versionName="1.3">
   <application android:label="@string/APP_name" android:icon="@drawable/icon">
 	<activity android:name="TaskListActivity"
-			  android:label="@string/APP_name">
+			  android:label="@string/APP_name"
+			  android:configChanges="orientation">
 	  <intent-filter>
 		<action android:name="android.intent.action.MAIN" />
 		<category android:name="android.intent.category.LAUNCHER" />
