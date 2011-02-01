@@ -20,6 +20,7 @@ public class TaskXmlHandler extends DefaultHandler {
 	private Project _project;
 	private Date _due;
 	private Date _showFrom;
+	private boolean _err;
 
 	private final StringBuffer _text;
 	private static final DateFormat DATEFORM = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
@@ -40,6 +41,7 @@ public class TaskXmlHandler extends DefaultHandler {
 			_project = null;
 			_due = null;
 			_showFrom = null;
+			_err = false;
 		}
 		_text.setLength(0);
 	}
@@ -47,10 +49,12 @@ public class TaskXmlHandler extends DefaultHandler {
 	@Override
 	public void endElement(String uri, String localName, String qName) {
 		if(qName.equals("todo")) {
-			try {
-				new Task(_id, _description, _notes, _context, _project, _due, _showFrom);
-			} catch(DuplicateTaskException e) {
-				Log.w(TAG, "Tried to add the same task twice, id: " + String.valueOf(_id), e);
+			if(!_err) {
+				try {
+					new Task(_id, _description, _notes, _context, _project, _due, _showFrom);
+				} catch(DuplicateTaskException e) {
+					Log.w(TAG, "Tried to add the same task twice, id: " + String.valueOf(_id), e);
+				}
 			}
 		} else if(qName.equals("id")) {
 			_id = Integer.valueOf(_text.toString());
@@ -60,6 +64,9 @@ public class TaskXmlHandler extends DefaultHandler {
 			_notes = _text.toString();
 		} else if(qName.equals("context-id")) {
 			_context = TodoContext.getContext(Integer.parseInt(_text.toString()));
+			if(_context == null) {
+				_err = true;
+			}
 		} else if(qName.equals("project-id")) {
 			if(_text.length() > 0) {
 				_project = Project.getProject(Integer.parseInt(_text.toString()));
