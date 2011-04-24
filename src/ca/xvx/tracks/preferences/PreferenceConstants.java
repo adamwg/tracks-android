@@ -8,4 +8,5 @@ public interface PreferenceConstants {
 	public static final String BADCERT = "badcert";
 	public static final String USERNAME = "username";
 	public static final String PASSWORD = "password";
+	public static final String DEFER = "defer";
 }

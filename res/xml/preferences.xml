@@ -36,4 +36,12 @@
 						android:password="true"
 						android:key="password" />
   </PreferenceCategory>
+
+  <PreferenceCategory android:title="Interface">  
+	<CheckBoxPreference android:defaultValue="true"
+						android:title="@string/SETTINGS_defer"
+						android:summaryOn="@string/SETTINGS_defer_summary_on"
+						android:summaryOff="@string/SETTINGS_defer_summary_off"
+						android:key="defer" />
+  </PreferenceCategory>
 </PreferenceScreen>

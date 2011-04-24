@@ -14,6 +14,9 @@
   <string name="SETTINGS_badcert">Ignore Certificates Errors?</string>
   <string name="SETTINGS_badcert_summary_off">Will fail on HTTPS certificate errors</string>
   <string name="SETTINGS_badcert_summary_on">Will ignore HTTPS certificate errors</string>
+  <string name="SETTINGS_defer">Show Defer Buttons</string>
+  <string name="SETTINGS_defer_summary_off">Defer buttons will be hidden</string>
+  <string name="SETTINGS_defer_summary_on">Defer buttons will be shown</string>
 
   <string name="ERR_badprefs">Please check your settings.</string>
   <string name="ERR_parse">Parse Error</string>
