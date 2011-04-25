@@ -32,6 +32,8 @@ public class TaskListActivity extends ExpandableListActivity {
 	private static final int SETTINGS = 1;
 	private static final int NEW_TASK = 2;
 	private static final int EDIT_TASK = 2;
+	private static final int NEW_CONTEXT = 3;
+	private static final int EDIT_CONTEXT = 3;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -113,6 +115,12 @@ public class TaskListActivity extends ExpandableListActivity {
 			TaskListItem tli = (TaskListItem)info.targetView;
 			inflater.inflate(R.menu.task_context_menu, menu);
 			menu.setHeaderTitle(tli.getTask().getDescription());
+		} else {
+			int gid = getExpandableListView().getPackedPositionGroup(info.packedPosition);
+			TodoContext c = (TodoContext)_tla.getGroup(gid);
+			Intent i = new Intent(this, ContextEditorActivity.class);
+			i.putExtra("context", c.getId());
+			startActivityForResult(i, EDIT_CONTEXT);
 		}
 	}
 
@@ -162,6 +170,14 @@ public class TaskListActivity extends ExpandableListActivity {
 				_tla.notifyDataSetChanged();
 			}
 		}
+
+		if(requestCode == NEW_CONTEXT || requestCode == EDIT_CONTEXT) {
+			Log.v(TAG, "Returned from edit");
+			if(resultCode == ContextEditorActivity.SAVED) {
+				Log.v(TAG, "Context was saved");
+				_tla.notifyDataSetChanged();
+			}
+		}
 	}
 
 	@Override
@@ -187,6 +203,9 @@ public class TaskListActivity extends ExpandableListActivity {
 		switch(item.getItemId()) {
 		case R.id.MENU_add:
 			startActivityForResult(new Intent(this, TaskEditorActivity.class), NEW_TASK);
+			return true;
+		case R.id.MENU_addcontext:
+			startActivityForResult(new Intent(this, ContextEditorActivity.class), NEW_CONTEXT);
 			return true;
 		case R.id.MENU_settings:
 			startActivityForResult(new Intent(this, SettingsActivity.class), SETTINGS);

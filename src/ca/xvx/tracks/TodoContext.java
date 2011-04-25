@@ -17,19 +17,25 @@ public class TodoContext implements Comparable<TodoContext> {
 		CONTEXTS = new HashMap<Integer, TodoContext>();
 	}
 
-	public TodoContext(int id, String name, int position, boolean hide) throws DuplicateContextException {
-		if(CONTEXTS.containsKey(id)) {
-			throw new DuplicateContextException();
-		}
-		
-		_id = id;
+	public TodoContext(String name, int position, boolean hide) {
+		_id = -1;
 		_name = name;
 		_position = position;
 		_hide = hide;
+	}
+
+	public TodoContext(int id, String name, int position, boolean hide) throws DuplicateContextException {
+		this(name, position, hide);
+		
+		if(CONTEXTS.containsKey(id)) {
+			throw new DuplicateContextException();
+		}
+
+		_id = id;
 		
 		CONTEXTS.put(id, this);
 	}
-	
+
 	public int getId() {
 		return _id;
 	}
@@ -46,20 +52,26 @@ public class TodoContext implements Comparable<TodoContext> {
 		_id = id;
 	}
 	
-	public void setName(String name) {
+	public String setName(String name) {
+		String on = _name;
 		_name = name;
+		return on;
 	}
 	
-	public void setPosition(int pos) {
+	public int setPosition(int pos) {
+		int op = _position;
 		_position = pos;
+		return op;
 	}
 
 	public boolean isHidden() {
 		return _hide;
 	}
 
-	public void setHidden(boolean hide) {
+	public boolean setHidden(boolean hide) {
+		boolean oh = _hide;
 		_hide = hide;
+		return oh;
 	}
 
 	@Override

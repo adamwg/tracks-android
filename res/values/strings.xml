@@ -23,15 +23,19 @@
   <string name="ERR_fetch">Fetch Error</string>
   <string name="ERR_save_general">Failed to save task. Check your connection and try again.</string>
   <string name="ERR_save_baddata">Description must be provided.</string>
+  <string name="ERR_savecontext_baddata">Name must be provided.</string>
+  <string name="ERR_savecontext_general">Failed to save context. Check your connection and try again.</string>
 
   <string name="MSG_fetching">Fetching Data</string>  
   <string name="MSG_parsing">Parsing Data</string>
-  <string name="MSG_saving">Saving Task</string>
+  <string name="MSG_saving">Saving</string>
   <string name="MSG_welcome">Welcome to Tracks for Android!  Please fill in your server and account settings, then press the back button to see your task list.  You can get back to this settings screen later from the menu.</string>
   
   <string name="MENU_settings">Settings</string>
   <string name="MENU_refresh">Refresh</string>
   <string name="MENU_add">Add Task</string>
+  <string name="MENU_addcontext">Add Context</string>
+  <string name="MENU_addproject">Add Project</string>
   
   <string name="delete_task">Delete Action</string>
   <string name="edit_task">Edit Action</string>
@@ -45,4 +49,9 @@
   <string name="TEA_show_from">Show From</string>
   <string name="TEA_save">Save</string>
   <string name="TEA_cancel">Cancel</string>
+
+  <string name="CEA_name">Name</string>
+  <string name="CEA_hide">Hide context?</string>
+  <string name="CEA_save">Save</string>
+  <string name="CEA_cancel">Cancel</string>
 </resources>

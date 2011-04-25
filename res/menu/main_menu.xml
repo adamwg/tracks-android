@@ -3,6 +3,9 @@
   <item android:id="@+id/MENU_add"
         android:icon="@android:drawable/ic_menu_add"
         android:title="@string/MENU_add" />
+  <item android:id="@+id/MENU_addcontext"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="@string/MENU_addcontext" />
   <item android:id="@+id/MENU_refresh"
         android:icon="@drawable/ic_menu_refresh"
         android:title="@string/MENU_refresh" />

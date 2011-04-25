@@ -14,6 +14,8 @@
 	</activity>
 	<activity android:name="SettingsActivity" />
 	<activity android:name="TaskEditorActivity" />
+	<activity android:name="ContextEditorActivity" />
+	<activity android:name="ProjectEditorActivity" />
   </application>
  
   <uses-sdk android:minSdkVersion="6" 

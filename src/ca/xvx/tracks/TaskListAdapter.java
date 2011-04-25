@@ -45,16 +45,21 @@ public class TaskListAdapter extends BaseExpandableListAdapter {
 		_contexts.clear();
 		_tasks.clear();
 		for(Task t : Task.getAllTasks()) {
-			if(_tasks.get(t.getContext()) == null) {
-				_contexts.add(t.getContext());
-				_tasks.put(t.getContext(), new Vector<Task>());
+			if(!t.getContext().isHidden()) {
+				if(_tasks.get(t.getContext()) == null) {
+					_contexts.add(t.getContext());
+					_tasks.put(t.getContext(), new Vector<Task>());
+				}
+				_tasks.get(t.getContext()).add(t);
 			}
-			_tasks.get(t.getContext()).add(t);
+			
 		}
 
 		Collections.sort(_contexts);
 		for(TodoContext c : _contexts) {
-			Collections.sort(_tasks.get(c));
+			if(!c.isHidden()) {
+				Collections.sort(_tasks.get(c));
+			}
 		}
 
 		super.notifyDataSetChanged();

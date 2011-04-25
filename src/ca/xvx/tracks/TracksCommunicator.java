@@ -243,6 +243,61 @@ public class TracksCommunicator extends HandlerThread {
 			act.notify.sendEmptyMessage(UPDATE_FAIL_CODE);
 		}
 	}
+
+	private void updateContext(TracksAction act) {
+		final boolean badcert = _prefs.getBoolean(PreferenceConstants.BADCERT, false);
+		final String username = _prefs.getString(PreferenceConstants.USERNAME, null);
+		final String password = _prefs.getString(PreferenceConstants.PASSWORD, null);
+
+		TodoContext c = (TodoContext)act.target;
+
+		Log.d(TAG, "Updating context " + String.valueOf(c.getId()));
+
+		StringBuilder xml = new StringBuilder("<context>");
+		xml.append("<name>"); xml.append(c.getName()); xml.append("</name>");
+		xml.append("<hide type=\"boolean\">"); xml.append(c.isHidden() ? "true" : "false"); xml.append("</hide>");
+		xml.append("<position type=\"integer\">"); xml.append(String.valueOf(c.getPosition())); xml.append("</position>");
+		xml.append("</context>");
+
+		Log.v(TAG, "Sending: " + xml.toString());
+
+		try {
+			HttpResponse r;
+			int resp;
+
+			if(c.getId() < 0) {
+				Log.v(TAG, "Posting to contexts.xml to create new context");
+				r = HttpConnection.post(PreferenceUtils.getUri(_prefs, "contexts.xml"), username, password,
+										xml.toString(), badcert);
+			} else {
+				Log.v(TAG, "Putting to update existing context");
+				r = HttpConnection.put(PreferenceUtils.getUri(_prefs,
+														 "contexts/" + String.valueOf(c.getId()) + ".xml"),
+									   username, password, xml.toString(), badcert);
+			}
+
+			resp = r.getStatusLine().getStatusCode();
+
+			if(resp == 200) {
+				Log.d(TAG, "Successfully updated context");
+				act.notify.sendEmptyMessage(SUCCESS_CODE);
+			} else if(resp == 201) {
+				Log.d(TAG, "Successfully created context.");
+				String got = r.getFirstHeader("Location").getValue();
+				got = got.substring(got.lastIndexOf('/') + 1);
+				int cno = Integer.parseInt(got);
+				c.setId(cno);
+				Log.d(TAG, "ID of new context is: " + String.valueOf(cno));
+				act.notify.sendEmptyMessage(SUCCESS_CODE);
+			} else {
+				Log.w(TAG, "Unexpected response from server: " + String.valueOf(resp));
+				act.notify.sendEmptyMessage(UPDATE_FAIL_CODE);
+			}
+		} catch(Exception e) {
+			Log.w(TAG, "Error updating context", e);
+			act.notify.sendEmptyMessage(UPDATE_FAIL_CODE);
+		}		
+	}
 	
 	private class CommHandler extends Handler {
 		@Override
@@ -264,6 +319,10 @@ public class TracksCommunicator extends HandlerThread {
 
 			case DELETE_TASK:
 				deleteTask(act);
+				break;
+
+			case UPDATE_CONTEXT:
+				updateContext(act);
 				break;
 			}
 		}

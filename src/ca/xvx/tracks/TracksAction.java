@@ -3,7 +3,7 @@ package ca.xvx.tracks;
 import android.os.Handler;
 
 public class TracksAction {
-	public enum ActionType { FETCH_TASKS, COMPLETE_TASK, UPDATE_TASK, DELETE_TASK };
+	public enum ActionType { FETCH_TASKS, COMPLETE_TASK, UPDATE_TASK, DELETE_TASK, UPDATE_CONTEXT };
 
 	ActionType type;
 	Object target;
