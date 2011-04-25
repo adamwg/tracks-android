@@ -298,7 +298,61 @@ public class TracksCommunicator extends HandlerThread {
 			act.notify.sendEmptyMessage(UPDATE_FAIL_CODE);
 		}		
 	}
-	
+
+	private void updateProject(TracksAction act) {
+		final boolean badcert = _prefs.getBoolean(PreferenceConstants.BADCERT, false);
+		final String username = _prefs.getString(PreferenceConstants.USERNAME, null);
+		final String password = _prefs.getString(PreferenceConstants.PASSWORD, null);
+
+		Project p = (Project)act.target;
+
+		Log.d(TAG, "Updating project " + String.valueOf(p.getId()));
+
+		StringBuilder xml = new StringBuilder("<project>");
+		xml.append("<name>"); xml.append(p.getName()); xml.append("</name>");
+		xml.append("<description>"); xml.append(p.getDescription() == null ? "" : p.getDescription()); xml.append("</description>");
+		xml.append("</project>");
+
+		Log.v(TAG, "Sending: " + xml.toString());
+
+		try {
+			HttpResponse r;
+			int resp;
+
+			if(p.getId() < 0) {
+				Log.v(TAG, "Posting to contexts.xml to create new context");
+				r = HttpConnection.post(PreferenceUtils.getUri(_prefs, "projects.xml"), username, password,
+										xml.toString(), badcert);
+			} else {
+				Log.v(TAG, "Putting to update existing context");
+				r = HttpConnection.put(PreferenceUtils.getUri(_prefs,
+														 "projects/" + String.valueOf(p.getId()) + ".xml"),
+									   username, password, xml.toString(), badcert);
+			}
+
+			resp = r.getStatusLine().getStatusCode();
+
+			if(resp == 200) {
+				Log.d(TAG, "Successfully updated context");
+				act.notify.sendEmptyMessage(SUCCESS_CODE);
+			} else if(resp == 201) {
+				Log.d(TAG, "Successfully created context.");
+				String got = r.getFirstHeader("Location").getValue();
+				got = got.substring(got.lastIndexOf('/') + 1);
+				int pno = Integer.parseInt(got);
+				p.setId(pno);
+				Log.d(TAG, "ID of new project is: " + String.valueOf(pno));
+				act.notify.sendEmptyMessage(SUCCESS_CODE);
+			} else {
+				Log.w(TAG, "Unexpected response from server: " + String.valueOf(resp));
+				act.notify.sendEmptyMessage(UPDATE_FAIL_CODE);
+			}
+		} catch(Exception e) {
+			Log.w(TAG, "Error updating context", e);
+			act.notify.sendEmptyMessage(UPDATE_FAIL_CODE);
+		}		
+	}
+
 	private class CommHandler extends Handler {
 		@Override
 		public void handleMessage(Message msg) {
@@ -323,6 +377,10 @@ public class TracksCommunicator extends HandlerThread {
 
 			case UPDATE_CONTEXT:
 				updateContext(act);
+				break;
+
+			case UPDATE_PROJECT:
+				updateProject(act);
 				break;
 			}
 		}

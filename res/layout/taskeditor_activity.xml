@@ -33,18 +33,38 @@
 	<TextView android:layout_width="fill_parent"
 			  android:layout_height="wrap_content"
 			  android:text="@string/TEA_project" />
-	<Spinner android:id="@+id/TEA_project"
-			 android:layout_width="fill_parent"
-			 android:layout_height="wrap_content"
-			 android:prompt="@string/TEA_project" />
+	<LinearLayout android:orientation="horizontal"
+				  android:layout_width="fill_parent"
+				  android:layout_height="wrap_content">
+	  <Spinner android:id="@+id/TEA_project"
+			   android:layout_width="fill_parent"
+			   android:layout_height="wrap_content"
+			   android:prompt="@string/TEA_project" 
+			   android:layout_weight="1" />
+	  <Button android:id="@+id/TEA_add_project"
+			  android:layout_width="wrap_content"
+			  android:layout_height="wrap_content"
+			  android:layout_weight="0"
+			  android:text=" + " />
+	</LinearLayout>
 
 	<TextView android:layout_width="fill_parent"
 			  android:layout_height="wrap_content"
 			  android:text="@string/TEA_context" />
-	<Spinner android:id="@+id/TEA_context"
-			 android:layout_width="fill_parent"
-			 android:layout_height="wrap_content"
-			 android:prompt="@string/TEA_context" />
+	<LinearLayout android:orientation="horizontal"
+				  android:layout_width="fill_parent"
+				  android:layout_height="wrap_content">
+	  <Spinner android:id="@+id/TEA_context"
+			   android:layout_width="fill_parent"
+			   android:layout_height="wrap_content"
+			   android:prompt="@string/TEA_context" 
+			   android:layout_weight="1" />
+	  <Button android:id="@+id/TEA_add_context"
+			  android:layout_width="wrap_content"
+			  android:layout_height="wrap_content"
+			  android:layout_weight="0"
+			  android:text=" + " />
+	</LinearLayout>
 
 	<TableLayout android:layout_width="fill_parent"
 				 android:layout_height="wrap_content"

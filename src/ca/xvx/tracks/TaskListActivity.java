@@ -34,6 +34,8 @@ public class TaskListActivity extends ExpandableListActivity {
 	private static final int EDIT_TASK = 2;
 	private static final int NEW_CONTEXT = 3;
 	private static final int EDIT_CONTEXT = 3;
+	private static final int NEW_PROJECT = 4;
+	private static final int EDIT_PROJECT = 4;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -178,6 +180,14 @@ public class TaskListActivity extends ExpandableListActivity {
 				_tla.notifyDataSetChanged();
 			}
 		}
+
+		if(requestCode == NEW_PROJECT || requestCode == EDIT_PROJECT) {
+			Log.v(TAG, "Returned from edit");
+			if(resultCode == ProjectEditorActivity.SAVED) {
+				Log.v(TAG, "Project was saved");
+				_tla.notifyDataSetChanged();
+			}
+		}
 	}
 
 	@Override
@@ -206,6 +216,9 @@ public class TaskListActivity extends ExpandableListActivity {
 			return true;
 		case R.id.MENU_addcontext:
 			startActivityForResult(new Intent(this, ContextEditorActivity.class), NEW_CONTEXT);
+			return true;
+		case R.id.MENU_addproject:
+			startActivityForResult(new Intent(this, ProjectEditorActivity.class), NEW_PROJECT);
 			return true;
 		case R.id.MENU_settings:
 			startActivityForResult(new Intent(this, SettingsActivity.class), SETTINGS);

@@ -26,6 +26,9 @@ import java.util.Date;
 
 public class TaskEditorActivity extends Activity {
 	private static final String TAG = "TaskEditorActivity";
+
+	private static final int NEW_CONTEXT = 1;
+	private static final int NEW_PROJECT = 2;
 	
 	private EditText _description;
 	private EditText _notes;
@@ -52,6 +55,10 @@ public class TaskEditorActivity extends Activity {
 
 		Button saveButt;
 		Button cancelButt;
+		Button newCButt, newPButt;
+
+		ArrayAdapter<TodoContext> cad;
+		ArrayAdapter<Project> pad;
 
 		final java.text.DateFormat dform = DateFormat.getDateFormat(this);
 
@@ -64,30 +71,14 @@ public class TaskEditorActivity extends Activity {
 		_dueButt = (Button)findViewById(R.id.TEA_due_date);
 		_showButt = (Button)findViewById(R.id.TEA_show_from);
 
+		newCButt = (Button)findViewById(R.id.TEA_add_context);
+		newPButt = (Button)findViewById(R.id.TEA_add_project);
+		
 		saveButt = (Button)findViewById(R.id.TEA_save);
 		cancelButt = (Button)findViewById(R.id.TEA_cancel);
-
-		ArrayAdapter<TodoContext> cad = new ArrayAdapter<TodoContext>(this, android.R.layout.simple_spinner_item,
-																	  TodoContext.getAllContexts().toArray(new TodoContext[0]));
-		cad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		cad.sort(new Comparator<TodoContext>() {
-				@Override
-				public int compare(TodoContext a, TodoContext b) {
-					return a.getPosition() - b.getPosition();
-				}
-			});
-		_context.setAdapter(cad);
-
-		ArrayAdapter<Project> pad = new ArrayAdapter<Project>(this, android.R.layout.simple_spinner_item,
-															  Project.getActiveProjects().toArray(new Project[0]));
-		pad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		pad.sort(new Comparator<Project>() {
-				@Override
-				public int compare(Project a, Project b) {
-					return a.getPosition() - b.getPosition();
-				}
-			});
-		_project.setAdapter(pad);
+		
+		cad = refreshContexts();
+		pad = refreshProjects();
 
 		_commHandler = TracksCommunicator.getHandler();
 		int tno = intent.getIntExtra("task", -1);
@@ -112,6 +103,22 @@ public class TaskEditorActivity extends Activity {
 				_project.setSelection(pad.getPosition(p));
 			}
 		}
+
+		newCButt.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Log.v(TAG, "Going to new context");
+					startActivityForResult(new Intent(v.getContext(), ContextEditorActivity.class), NEW_CONTEXT);
+				}
+			});
+
+		newPButt.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Log.v(TAG, "Going to new context");
+					startActivityForResult(new Intent(v.getContext(), ProjectEditorActivity.class), NEW_PROJECT);
+				}
+			});
 
 		saveButt.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -163,6 +170,49 @@ public class TaskEditorActivity extends Activity {
 					return true;
 				}
 			});
+	}
+
+	private ArrayAdapter<Project> refreshProjects() {
+		ArrayAdapter<Project> pad = new ArrayAdapter<Project>(this, android.R.layout.simple_spinner_item,
+															  Project.getActiveProjects().toArray(new Project[0]));
+		pad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		pad.sort(new Comparator<Project>() {
+				@Override
+				public int compare(Project a, Project b) {
+					return a.getPosition() - b.getPosition();
+				}
+			});
+		_project.setAdapter(pad);
+
+		return pad;
+	}
+	
+	private ArrayAdapter<TodoContext> refreshContexts() {
+		ArrayAdapter<TodoContext> cad = new ArrayAdapter<TodoContext>(this, android.R.layout.simple_spinner_item,
+																	  TodoContext.getAllContexts().toArray(new TodoContext[0]));
+		cad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		cad.sort(new Comparator<TodoContext>() {
+				@Override
+				public int compare(TodoContext a, TodoContext b) {
+					return a.getPosition() - b.getPosition();
+				}
+			});
+		_context.setAdapter(cad);
+		
+		return cad;
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch(requestCode) {
+		case NEW_CONTEXT:
+			refreshContexts();
+			break;
+		case NEW_PROJECT:
+			refreshProjects();
+			break;
+		default:
+		}
 	}
 
 	private void save() {

@@ -25,6 +25,8 @@
   <string name="ERR_save_baddata">Description must be provided.</string>
   <string name="ERR_savecontext_baddata">Name must be provided.</string>
   <string name="ERR_savecontext_general">Failed to save context. Check your connection and try again.</string>
+  <string name="ERR_saveproject_baddata">Name must be provided.</string>
+  <string name="ERR_saveproject_general">Failed to save project. Check your connection and try again.</string>
 
   <string name="MSG_fetching">Fetching Data</string>  
   <string name="MSG_parsing">Parsing Data</string>
@@ -54,4 +56,9 @@
   <string name="CEA_hide">Hide context?</string>
   <string name="CEA_save">Save</string>
   <string name="CEA_cancel">Cancel</string>
+
+  <string name="PEA_name">Name</string>
+  <string name="PEA_description">Description</string>
+  <string name="PEA_save">Save</string>
+  <string name="PEA_cancel">Cancel</string>
 </resources>

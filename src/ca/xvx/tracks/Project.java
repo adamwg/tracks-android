@@ -26,18 +26,24 @@ public class Project {
 		_name = "<none>";
 		_state = ProjectState.ACTIVE;
 	}
+
+	public Project(String name, String description, int position, ProjectState state, TodoContext defaultContext) {
+		_id = -1;
+		_name = name;
+		_position = position;
+		_state = state;
+		_defaultContext = defaultContext;
+	}
 	
 	public Project(int id, String name, String description, int position, ProjectState state, TodoContext defaultContext) throws DuplicateProjectException {
+		this(name, description, position, state, defaultContext);
+		
 		if(PROJECTS.containsKey(id)) {
 			throw new DuplicateProjectException();
 		}
 		
 		_id = id;
-		_name = name;
-		_position = position;
-		_state = state;
-		_defaultContext = defaultContext;
-		
+
 		PROJECTS.put(id, this);
 	}
 	
@@ -60,22 +66,40 @@ public class Project {
 		return _defaultContext;
 	}
 	public void setId(int id) {
+		int oid = _id;
+		
 		_id = id;
+
+		if(oid < 0) {
+			if(!PROJECTS.containsKey(id)) {
+				PROJECTS.put(id, this);
+			}
+		}
 	}
-	public void setName(String name) {
+	public String setName(String name) {
+		String on = _name;
 		_name = name;
+		return on;
 	}
-	public void setDescription(String description) {
+	public String setDescription(String description) {
+		String od = _description;
 		_description = description;
+		return od;
 	}
-	public void setPosition(int position) {
+	public int setPosition(int position) {
+		int op = _position;
 		_position = position;
+		return op;
 	}
-	public void setState(ProjectState state) {
+	public ProjectState setState(ProjectState state) {
+		ProjectState ops = _state;
 		_state = state;
+		return ops;
 	}
-	public void setDefaultContext(TodoContext defaultContext) {
+	public TodoContext setDefaultContext(TodoContext defaultContext) {
+		TodoContext old = _defaultContext;
 		_defaultContext = defaultContext;
+		return old;
 	}
 
 	@Override

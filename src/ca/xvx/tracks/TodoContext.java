@@ -49,7 +49,14 @@ public class TodoContext implements Comparable<TodoContext> {
 	}
 	
 	public void setId(int id) {
+		int oid = _id;
 		_id = id;
+
+		if(oid < 0) {
+			if(!CONTEXTS.containsKey(id)) {
+				CONTEXTS.put(id, this);
+			}
+		}
 	}
 	
 	public String setName(String name) {
