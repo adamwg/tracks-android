@@ -1,0 +1,21 @@
+<?xml version="1.0"?> 
+<svg width="180" height="120" xmlns="http://www.w3.org/2000/svg"> 
+ <metadata>image/svg+xml</metadata> 
+ <defs> 
+  <linearGradient id="svg_6" x1="0.25" y1="0" x2="0.75" y2="1"> 
+   <stop offset="0" stop-color="#ffffff"/> 
+   <stop offset="1" stop-color="#000000"/> 
+  </linearGradient> 
+  <linearGradient id="svg_7" x1="0.5" y1="0" x2="0.5" y2="1"> 
+   <stop offset="0" stop-color="#ffffff"/> 
+   <stop offset="1" stop-color="#000000"/> 
+  </linearGradient> 
+ </defs> 
+ <g> 
+  <rect id="svg_1" height="120" width="180" y="0" x="0" stroke-dasharray="null" stroke-width="1px" fill="#99cc33"/> 
+  <path fill="#ffffff" fill-rule="evenodd" stroke-width="1px" d="m98.203857,28.567732c-11.773895,-9.904955 -17.344498,-18.567732 -17.344498,-18.567732c-21.743134,15.719688 -44.834156,71.536339 -44.834156,71.536339c-10.821472,-18.691711 -21.702066,-23.905209 -21.702066,-23.905209c-4.891532,8.019901 -13.323137,18.708126 -13.323137,18.708126c19.665712,6.49852 36.172367,30.345634 36.172367,30.345634c35.683376,-68.737869 61.03149,-78.117161 61.03149,-78.117161l0,0.000002z"/> 
+  <title>Layer 1</title> 
+  <text xml:space="preserve" text-anchor="middle" font-family="Droid Sans" font-size="14" id="svg_2" y="100" x="113" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="0" fill="#ffffff" font-weight="bold">Tracks for Android</text> 
+  <rect height="120" width="180" y="0" x="0" stroke-dasharray="null" stroke-width="1px" fill="url(#svg_7)" id="svg_4" opacity="0.2"/> 
+ </g> 
+</svg>
