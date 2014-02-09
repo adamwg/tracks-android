@@ -45,7 +45,7 @@ public class ContextXmlHandler extends DefaultHandler {
 		} else if(qName.equals("name")) {
 			_name = _text.toString();
 		} else if(qName.equals("hide")) {
-			_hide = _text.toString().equals("hide") ? true : false;
+			_hide = _text.toString().equals("true") ? true : false;
 		} else if(qName.equals("position")) {
 			_position = Integer.valueOf(_text.toString());
 		}
